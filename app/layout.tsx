@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const SITE_NAME = "ai-review-tech";
+const SITE_NAME = "AI Review";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.ai-review.tech"),
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: "Expert guides, reviews and tips.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
