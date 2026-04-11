@@ -8,6 +8,21 @@ export const metadata: Metadata = {
 
 const STARS = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
 
+const AFFILIATE_TOOLS = [
+  {
+    name: "JobCopilot",
+    icon: "🚀",
+    tagline: "AI-Powered Job Applications on Autopilot",
+    description:
+      "JobCopilot automatically applies to hundreds of jobs tailored to your profile every day — so you can focus on interviews, not job boards. Set your preferences once and let AI do the heavy lifting.",
+    features: ["Auto-applies to 1000+ job boards", "AI-tailored cover letters", "Smart job matching by skills & salary", "Real-time application tracking"],
+    cta: "Start Applying Automatically",
+    href: "https://jobcopilot.com/?linkId=lp_494205&sourceId=constantin-florentin-cristian&tenantId=jobcopilot",
+    badge: "AI Job Search",
+    color: "#4f8bff",
+  },
+];
+
 export default function HomePage() {
   const posts = getAllPosts();
   const featured = posts[0] ?? null;
@@ -130,6 +145,83 @@ export default function HomePage() {
         .post-date { font-size: 0.72rem; color: var(--muted); }
         .post-link { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
 
+        /* ── AFFILIATE / RECOMMENDED TOOLS ── */
+        .affiliate-section { padding: 70px 0; }
+        .affiliate-grid { display: flex; flex-direction: column; gap: 24px; }
+        .affiliate-card {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          gap: 28px;
+          padding: 32px 36px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+          position: relative;
+          overflow: hidden;
+        }
+        .affiliate-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(79,139,255,0.04), transparent 60%);
+          pointer-events: none;
+        }
+        .affiliate-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .affiliate-icon-wrap {
+          width: 72px; height: 72px;
+          border-radius: 16px;
+          background: linear-gradient(135deg, rgba(79,139,255,0.15), rgba(124,92,252,0.1));
+          border: 1px solid rgba(79,139,255,0.2);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 2.2rem;
+          flex-shrink: 0;
+        }
+        .affiliate-body { min-width: 0; }
+        .affiliate-tool-badge {
+          display: inline-block;
+          padding: 3px 10px;
+          border-radius: 20px;
+          background: rgba(79,139,255,0.12);
+          border: 1px solid rgba(79,139,255,0.2);
+          color: var(--accent);
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          margin-bottom: 8px;
+        }
+        .affiliate-name { font-size: 1.25rem; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
+        .affiliate-tagline { font-size: 0.88rem; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
+        .affiliate-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+        .affiliate-features { display: flex; flex-wrap: wrap; gap: 8px; }
+        .affiliate-feature {
+          display: inline-flex; align-items: center; gap: 5px;
+          padding: 4px 12px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          font-size: 0.75rem;
+          color: var(--muted);
+        }
+        .affiliate-feature::before { content: '✓'; color: #22c55e; font-weight: 700; font-size: 0.7rem; }
+        .affiliate-cta-wrap { flex-shrink: 0; text-align: center; }
+        .affiliate-btn {
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          padding: 14px 28px;
+          border-radius: 50px;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          color: #fff;
+          font-weight: 700;
+          font-size: 0.9rem;
+          white-space: nowrap;
+          transition: opacity 0.2s, transform 0.2s;
+          box-shadow: 0 4px 20px rgba(79,139,255,0.3);
+        }
+        .affiliate-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+        .affiliate-disclaimer { font-size: 0.68rem; color: var(--muted); margin-top: 8px; opacity: 0.7; }
+
         /* FAQ */
         .faq-list { display: flex; flex-direction: column; gap: 12px; }
         .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
@@ -163,6 +255,9 @@ export default function HomePage() {
           .featured-card { grid-template-columns: 1fr; }
           .featured-visual { min-height: 160px; font-size: 4rem; }
           .featured-content { padding: 28px 24px; }
+          .affiliate-card { grid-template-columns: 1fr; text-align: center; }
+          .affiliate-icon-wrap { margin: 0 auto; }
+          .affiliate-features { justify-content: center; }
         }
         @media (max-width: 600px) {
           .hero { padding: 60px 20px 50px; }
@@ -170,6 +265,7 @@ export default function HomePage() {
           .newsletter-form { flex-direction: column; }
           .why-grid { grid-template-columns: 1fr 1fr; }
           .stat-item { min-width: 100px; padding: 18px 10px; }
+          .affiliate-card { padding: 24px 20px; }
         }
       `}</style>
 
@@ -311,6 +407,38 @@ export default function HomePage() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* ── RECOMMENDED TOOLS (AFFILIATE) ── */}
+        <section className="affiliate-section">
+          <div className="section-eyebrow">Recommended Tools</div>
+          <div className="section-header">
+            <h2 className="section-title">Tools We Actually Use & Recommend</h2>
+          </div>
+          <div className="affiliate-grid">
+            {AFFILIATE_TOOLS.map((tool) => (
+              <div key={tool.name} className="affiliate-card">
+                <div className="affiliate-icon-wrap">{tool.icon}</div>
+                <div className="affiliate-body">
+                  <span className="affiliate-tool-badge">{tool.badge}</span>
+                  <div className="affiliate-name">{tool.name}</div>
+                  <div className="affiliate-tagline">{tool.tagline}</div>
+                  <div className="affiliate-desc">{tool.description}</div>
+                  <div className="affiliate-features">
+                    {tool.features.map((f) => (
+                      <span key={f} className="affiliate-feature">{f}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="affiliate-cta-wrap">
+                  <a href={tool.href} className="affiliate-btn" target="_blank" rel="noopener noreferrer">
+                    {tool.cta} →
+                  </a>
+                  <div className="affiliate-disclaimer">* Affiliate link</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* ── WHY TRUST US ── */}
