@@ -2,7 +2,6 @@ import { getAllPosts, getPostBySlug } from "../../lib/posts";
 import { marked } from "marked";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Comments } from "../../components/Comments";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -98,7 +97,6 @@ export default async function ArticlePage({ params }: Props) {
           <a href="/">← Back to all articles</a>
         </footer>
 
-        <Comments title={post.title} />
       </article>
     </>
   );
