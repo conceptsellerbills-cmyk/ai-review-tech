@@ -2,6 +2,7 @@ import { getAllPosts, getPostBySlug } from "../../lib/posts";
 import { marked } from "marked";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ArticleComments } from "../../components/ArticleComments";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -79,6 +80,26 @@ export default async function ArticlePage({ params }: Props) {
         .article-footer a:hover { color: var(--accent); }
         .site-footer { border-top: 1px solid var(--border); padding: 24px 0; margin-top: 60px; }
         .site-footer p { color: var(--muted); font-size: 0.82rem; }
+        .comments-section { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); }
+        .comments-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+        .comments-empty { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
+        .comments-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+        .comment-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+        .comment-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .comment-name { font-weight: 600; color: var(--accent); font-size: 0.88rem; }
+        .comment-time { font-size: 0.78rem; color: var(--muted); }
+        .comment-body { color: #c8cad8; font-size: 0.93rem; line-height: 1.65; white-space: pre-wrap; }
+        .comment-form { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .comment-form-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+        .comment-name-input { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; margin-bottom: 10px; outline: none; }
+        .comment-name-input:focus { border-color: var(--accent); }
+        .comment-body-input { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; margin-bottom: 12px; outline: none; resize: vertical; min-height: 100px; font-family: inherit; }
+        .comment-body-input:focus { border-color: var(--accent); }
+        .comment-submit { padding: 10px 24px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s; }
+        .comment-submit:hover { opacity: 0.85; }
+        .comment-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        .comment-error { color: #ef4444; font-size: 0.85rem; margin-bottom: 10px; }
+        .comment-success { color: #22c55e; font-size: 0.85rem; margin-bottom: 10px; }
       `}</style>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
@@ -97,6 +118,7 @@ export default async function ArticlePage({ params }: Props) {
           <a href="/">← Back to all articles</a>
         </footer>
 
+        <ArticleComments slug={post.slug} />
       </article>
     </>
   );
