@@ -1,23 +1,34 @@
-import { getAllPosts } from "@/lib/posts";
+import { MetadataRoute } from 'next'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
 
-export default function sitemap() {
-  const posts = getAllPosts();
-  const BASE = "https://www.ai-review.tech";
+export default function sitemap(): MetadataRoute.Sitemap {
+  const postsDir = path.join(process.cwd(), 'content/posts')
 
-  const postUrls = posts.map((post) => ({
-    url: BASE + "/" + post.slug,
-    lastModified: post.date ? new Date(post.date) : new Date(),
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }));
+  let posts: MetadataRoute.Sitemap = []
+
+  if (fs.existsSync(postsDir)) {
+    const files = fs.readdirSync(postsDir).filter((f) => f.endsWith('.md'))
+    posts = files.map((file) => {
+      const content = fs.readFileSync(path.join(postsDir, file), 'utf-8')
+      const { data } = matter(content)
+      return {
+        url: ,
+        lastModified: data.date ? new Date(data.date) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }
+    })
+  }
 
   return [
     {
-      url: BASE,
+      url: 'https://',
       lastModified: new Date(),
-      changeFrequency: "weekly",
+      changeFrequency: 'daily' as const,
       priority: 1,
     },
-    ...postUrls,
-  ];
+    ...posts,
+  ]
 }
