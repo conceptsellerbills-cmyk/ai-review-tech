@@ -25,6 +25,35 @@ const AFFILIATE_TOOLS = [
   },
 ];
 
+
+function getCover(keyword?: string, slug?: string): { gradient: string; emoji: string } {
+  const k = ((keyword || '') + ' ' + (slug || '')).toLowerCase()
+  if (k.includes('photo') || k.includes('image') || k.includes('art'))   return { gradient: 'linear-gradient(135deg,#7c3aed,#db2777)', emoji: '🎨' }
+  if (k.includes('video'))                                                  return { gradient: 'linear-gradient(135deg,#dc2626,#ea580c)', emoji: '🎬' }
+  if (k.includes('music') || k.includes('audio') || k.includes('song'))   return { gradient: 'linear-gradient(135deg,#7c3aed,#4f46e5)', emoji: '🎵' }
+  if (k.includes('code') || k.includes('coding') || k.includes('developer')) return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '💻' }
+  if (k.includes('seo') || k.includes('marketing'))                        return { gradient: 'linear-gradient(135deg,#16a34a,#0891b2)', emoji: '📈' }
+  if (k.includes('resume') || k.includes('cover letter') || k.includes('job')) return { gradient: 'linear-gradient(135deg,#1d4ed8,#4338ca)', emoji: '💼' }
+  if (k.includes('design') || k.includes('logo'))                          return { gradient: 'linear-gradient(135deg,#db2777,#9333ea)', emoji: '✏️' }
+  if (k.includes('email'))                                                  return { gradient: 'linear-gradient(135deg,#0891b2,#1d4ed8)', emoji: '📧' }
+  if (k.includes('meeting') || k.includes('productivity'))                 return { gradient: 'linear-gradient(135deg,#0d9488,#16a34a)', emoji: '⚡' }
+  if (k.includes('education') || k.includes('essay') || k.includes('learn')) return { gradient: 'linear-gradient(135deg,#d97706,#dc2626)', emoji: '🎓' }
+  if (k.includes('social media'))                                           return { gradient: 'linear-gradient(135deg,#e11d48,#7c3aed)', emoji: '📱' }
+  if (k.includes('customer service'))                                       return { gradient: 'linear-gradient(135deg,#0891b2,#16a34a)', emoji: '💬' }
+  if (k.includes('translation'))                                            return { gradient: 'linear-gradient(135deg,#0d9488,#4338ca)', emoji: '🌍' }
+  if (k.includes('presentation'))                                           return { gradient: 'linear-gradient(135deg,#ea580c,#dc2626)', emoji: '🗂️' }
+  if (k.includes('summarizer') || k.includes('summariz'))                  return { gradient: 'linear-gradient(135deg,#4338ca,#7c3aed)', emoji: '📋' }
+  if (k.includes('detector') || k.includes('plagiarism'))                  return { gradient: 'linear-gradient(135deg,#dc2626,#b91c1c)', emoji: '🔍' }
+  if (k.includes('humanizer'))                                              return { gradient: 'linear-gradient(135deg,#0891b2,#7c3aed)', emoji: '🧑‍💼' }
+  if (k.includes('paraphraser') || k.includes('story') || k.includes('writer') || k.includes('writing')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '✍️' }
+  if (k.includes('avatar') || k.includes('face'))                          return { gradient: 'linear-gradient(135deg,#db2777,#ea580c)', emoji: '👤' }
+  if (k.includes('interior') || k.includes('design'))                      return { gradient: 'linear-gradient(135deg,#d97706,#16a34a)', emoji: '🏠' }
+  if (k.includes('website') || k.includes('builder'))                      return { gradient: 'linear-gradient(135deg,#0891b2,#4f8bff)', emoji: '🌐' }
+  if (k.includes('chatgpt') || k.includes('claude') || k.includes('gemini') || k.includes('chatbot')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
+  if (k.includes('analytics') || k.includes('data'))                       return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '📊' }
+  return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
+}
+
 export default function HomePage() {
   const posts = getAllPosts();
   const featured = posts[0] ?? null;
@@ -146,6 +175,12 @@ export default function HomePage() {
         .post-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); }
         .post-date { font-size: 0.72rem; color: var(--muted); }
         .post-link { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
+
+        .post-cover { height: 130px; border-radius: 8px; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
+        .post-cover-emoji { font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); position: relative; z-index: 1; }
+        .post-cover-shine { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%); }
+        .post-cover-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 20px 20px; }
+
 
         /* ── AFFILIATE / RECOMMENDED TOOLS ── */
         .affiliate-section { padding: 70px 0; }
@@ -395,6 +430,13 @@ export default function HomePage() {
             <div className="post-grid">
               {(featured ? recent : posts.slice(0, 6)).map((post) => (
                 <article className="post-card" key={post.slug}>
+                  {(() => { const cv = getCover(post.keyword, post.slug); return (
+                    <div className="post-cover" style={{ background: cv.gradient }}>
+                      <div className="post-cover-dots" />
+                      <div className="post-cover-shine" />
+                      <span className="post-cover-emoji">{cv.emoji}</span>
+                    </div>
+                  )})()}
                   <div className="post-card-top">
                     {post.keyword && <span className="post-tag">{post.keyword}</span>}
                     <span className="post-read-time">⏱ 6 min</span>
