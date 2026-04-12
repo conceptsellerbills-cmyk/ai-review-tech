@@ -7,7 +7,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ai-review.tech"),
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: "Expert guides, reviews and tips.",
-  alternates: { canonical: "/" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
