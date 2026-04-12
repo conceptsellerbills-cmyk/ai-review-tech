@@ -3,42 +3,44 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
 const CATEGORIES: Record<string, { name: string; description: string; icon: string; keywords: string[] }> = {
-  'ai-writing': {
-    name: 'AI Writing',
-    description: 'The best AI writing tools for content creators, copywriters, and marketing teams.',
-    icon: '✍️',
-    keywords: ['writing', 'content', 'copy', 'blog', 'text', 'writer'],
-  },
-  'ai-image': {
-    name: 'AI Image',
-    description: 'AI image generators, art tools, and visual content creation platforms.',
-    icon: '🎨',
-    keywords: ['image', 'art', 'photo', 'visual', 'midjourney', 'dall-e', 'stable diffusion', 'generator'],
-  },
-  'ai-coding': {
-    name: 'AI Coding',
-    description: 'AI coding assistants, code completion tools, and developer productivity tools.',
-    icon: '💻',
-    keywords: ['coding', 'code', 'developer', 'programming', 'copilot', 'cursor', 'codeium'],
-  },
-  'chatbots': {
-    name: 'Chatbots',
-    description: 'AI chatbots, conversational AI, and virtual assistant tools.',
-    icon: '🤖',
-    keywords: ['chatbot', 'chat', 'chatgpt', 'claude', 'gemini', 'conversational', 'assistant', 'alternatives'],
-  },
-  'analytics': {
-    name: 'Analytics',
-    description: 'AI-powered data analytics, business intelligence, and insights tools.',
-    icon: '📊',
-    keywords: ['analytics', 'data', 'analysis', 'insights', 'bi', 'dashboard'],
-  },
-  'audio-video': {
-    name: 'Audio & Video',
-    description: 'AI voice generators, video tools, and audio production platforms.',
-    icon: '🎵',
-    keywords: ['voice', 'audio', 'video', 'speech', 'sound', 'music', 'tts'],
-  },
+
+  'ai-writing': { name: 'AI Writing', description: 'Best AI writing tools for bloggers, marketers and copywriters.', icon: '✍️', keywords: ['writing', 'content', 'copy', 'blog', 'text', 'writer'] },
+  'ai-image': { name: 'AI Image', description: 'AI image generators and visual content creation platforms.', icon: '🎨', keywords: ['image', 'art', 'photo', 'visual', 'midjourney', 'dall-e', 'stable diffusion'] },
+  'ai-coding': { name: 'AI Coding', description: 'AI coding assistants and developer productivity tools.', icon: '💻', keywords: ['coding', 'code', 'developer', 'programming', 'copilot', 'cursor'] },
+  'chatbots': { name: 'Chatbots', description: 'AI chatbots, conversational AI and virtual assistants.', icon: '🤖', keywords: ['chatbot', 'chat', 'chatgpt', 'claude', 'gemini', 'conversational', 'alternatives'] },
+  'analytics': { name: 'Analytics', description: 'AI-powered data analytics and business intelligence tools.', icon: '📊', keywords: ['analytics', 'data', 'analysis', 'insights', 'bi'] },
+  'audio-video': { name: 'Audio & Video', description: 'AI voice generators, video tools and audio production.', icon: '🎵', keywords: ['voice', 'audio', 'tts', 'speech', 'sound', 'music'] },
+  'ai-photo-tools': { name: 'AI Photo Tools', description: 'AI photo enhancers, editors and image upscaling tools.', icon: '📷', keywords: ['photo', 'enhance', 'upscale', 'restore', 'retouch', 'background remov', 'headshot'] },
+  'ai-humanizer': { name: 'AI Humanizer', description: 'Tools that make AI-generated text sound more human.', icon: '🧠', keywords: ['humaniz', 'human', 'bypass', 'undetect', 'rewrite'] },
+  'ai-paraphraser': { name: 'AI Paraphraser', description: 'AI paraphrasing tools for rewriting and rewording content.', icon: '🔄', keywords: ['paraphras', 'reword', 'rephras', 'rewrite', 'spinner'] },
+  'ai-music-generator': { name: 'AI Music Generator', description: 'AI tools for generating and composing original music.', icon: '🎸', keywords: ['music generat', 'compose', 'suno', 'udio', 'instrumental'] },
+  'ai-song-generator': { name: 'AI Song Generator', description: 'AI song generators with lyrics and vocals.', icon: '🎤', keywords: ['song generat', 'lyrics', 'vocal', 'suno', 'udio', 'ai song'] },
+  'ai-face-tools': { name: 'AI Face Tools', description: 'AI face swap, face generation and facial editing tools.', icon: '🪞', keywords: ['face swap', 'face generat', 'deepfake', 'face edit', 'portrait'] },
+  'ai-essay-writer': { name: 'AI Essay Writer', description: 'AI essay writing tools for students and academics.', icon: '📝', keywords: ['essay', 'academic', 'student', 'thesis', 'paper'] },
+  'ai-video-editor': { name: 'AI Video Editor', description: 'AI-powered video editing and post-production tools.', icon: '🎬', keywords: ['video edit', 'video generat', 'video creat', 'kling', 'runway', 'sora'] },
+  'ai-website-builder': { name: 'AI Website Builder', description: 'AI tools for building and designing websites without code.', icon: '🌐', keywords: ['website builder', 'web creat', 'no-code', 'landing page', 'wix ai', 'framer'] },
+  'ai-plagiarism-checker': { name: 'AI Plagiarism Checker', description: 'AI-powered plagiarism detection and originality checking.', icon: '🔍', keywords: ['plagiarism', 'originality', 'turnitin', 'duplicate', 'similarity'] },
+  'ai-story-generator': { name: 'AI Story Generator', description: 'AI story generators for fiction, scripts and creative writing.', icon: '📚', keywords: ['story generat', 'fiction', 'narrative', 'plot', 'creative writ'] },
+  'ai-avatar-generator': { name: 'AI Avatar Generator', description: 'AI tools for creating profile pictures and digital avatars.', icon: '👤', keywords: ['avatar', 'profile pic', 'headshot', 'pfp', 'character'] },
+  'ai-interior-design': { name: 'AI Interior Design', description: 'AI tools for interior design, room planning and decoration.', icon: '🏠', keywords: ['interior', 'room', 'decor', 'design', 'furniture', 'architec'] },
+  'ai-cover-letter': { name: 'AI Cover Letter', description: 'AI cover letter generators for job applications.', icon: '📄', keywords: ['cover letter', 'job application', 'resume', 'cv', 'jobcopilot'] },
+  'ai-logo-generator': { name: 'AI Logo Generator', description: 'AI logo makers and brand identity design tools.', icon: '✨', keywords: ['logo', 'brand', 'icon creat', 'looka', 'brandmark'] },
+  'ai-detector': { name: 'AI Detector', description: 'Tools to detect AI-generated content and deepfakes.', icon: '🕵️', keywords: ['detect', 'ai content detect', 'gptzero', 'originality', 'undetect'] },
+  'ai-summarizer': { name: 'AI Summarizer', description: 'AI tools for summarizing articles, documents and videos.', icon: '📋', keywords: ['summar', 'tldr', 'condensed', 'brief', 'abstract'] },
+  'ai-video': { name: 'AI Video Generator', description: 'AI video generation from text prompts and images.', icon: '🎥', keywords: ['video generat', 'text to video', 'runway', 'kling', 'sora', 'pika'] },
+  'ai-resume-builder': { name: 'AI Resume Builder', description: 'AI resume builders and CV generators for job seekers.', icon: '📑', keywords: ['resume', 'cv builder', 'curriculum vitae', 'job seeker'] },
+  'ai-presentation': { name: 'AI Presentation', description: 'AI tools for creating slides and presentations.', icon: '📊', keywords: ['presentation', 'slides', 'powerpoint', 'pitch deck', 'gamma'] },
+  'ai-translation': { name: 'AI Translation', description: 'AI translation tools for accurate multilingual content.', icon: '🌍', keywords: ['translat', 'language', 'multilingual', 'deepl', 'locali'] },
+  'ai-customer-service': { name: 'AI Customer Service', description: 'AI tools for automating and improving customer support.', icon: '💬', keywords: ['customer service', 'support', 'helpdesk', 'chatbot', 'intercom'] },
+  'ai-design-tools': { name: 'AI Design Tools', description: 'AI-powered graphic design and visual creation tools.', icon: '🖌️', keywords: ['design tool', 'graphic design', 'canva', 'adobe', 'figma'] },
+  'ai-seo-tools': { name: 'AI SEO Tools', description: 'AI tools for SEO optimization and content ranking.', icon: '🔎', keywords: ['seo', 'keyword research', 'rank', 'surfer', 'semrush', 'search optim'] },
+  'ai-email-tools': { name: 'AI Email Tools', description: 'AI email writers and inbox management tools.', icon: '📧', keywords: ['email', 'inbox', 'newsletter', 'cold email', 'outreach'] },
+  'ai-meeting-tools': { name: 'AI Meeting Tools', description: 'AI meeting assistants, notetakers and transcription tools.', icon: '📅', keywords: ['meeting', 'notetaker', 'transcript', 'otter', 'fireflies', 'summary'] },
+  'ai-productivity': { name: 'AI Productivity', description: 'AI tools for boosting personal and team productivity.', icon: '⚡', keywords: ['productivity', 'workflow', 'automat', 'task', 'notion', 'efficiency'] },
+  'ai-education': { name: 'AI Education', description: 'AI tools for learning, tutoring and educational content.', icon: '🎓', keywords: ['education', 'learn', 'tutor', 'student', 'teacher', 'course'] },
+  'ai-marketing': { name: 'AI Marketing', description: 'AI marketing tools for campaigns, ads and growth.', icon: '📈', keywords: ['marketing', 'campaign', 'ads', 'growth', 'funnel', 'lead gen'] },
+  'ai-social-media': { name: 'AI Social Media', description: 'AI tools for social media content creation and scheduling.', icon: '📱', keywords: ['social media', 'instagram', 'twitter', 'tiktok', 'linkedin', 'post'] },
+
 }
 
 type Props = { params: Promise<{ category: string }> }
@@ -52,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cat = CATEGORIES[category]
   if (!cat) return {}
   return {
-    title: cat.name + ' Tools',
+    title: cat.name + ' Tools — Best AI Tools 2025',
     description: cat.description,
   }
 }
@@ -65,18 +67,14 @@ export default async function CategoryPage({ params }: Props) {
   const allPosts = getAllPosts()
   const posts = allPosts.filter((p) => {
     const text = (p.title + ' ' + (p.keyword || '') + ' ' + (p.description || '') + ' ' + p.slug).toLowerCase()
-    return cat.keywords.some((kw) => text.includes(kw))
+    return cat.keywords.some((kw) => text.includes(kw.toLowerCase()))
   })
 
   return (
     <>
       <style>{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-          --bg: #080b14; --surface: #0f1420; --border: #1e2535;
-          --text: #e4e8f4; --muted: #7a82a0; --accent: #4f8bff; --accent2: #7c5cfc;
-          --radius: 12px;
-        }
+        :root { --bg: #080b14; --surface: #0f1420; --border: #1e2535; --text: #e4e8f4; --muted: #7a82a0; --accent: #4f8bff; --accent2: #7c5cfc; --radius: 12px; }
         body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
         .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
@@ -87,7 +85,7 @@ export default async function CategoryPage({ params }: Props) {
         .cat-desc { color: var(--muted); font-size: 1.05rem; max-width: 560px; margin: 0 auto 32px; }
         .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
         .back-link:hover { color: var(--accent); }
-        .posts-section { padding: 0 0 80px; }
+        .posts-section { padding: 0 0 60px; }
         .posts-count { font-size: 0.8rem; color: var(--muted); margin-bottom: 28px; }
         .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 20px; }
         .post-card { padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color 0.15s, transform 0.15s; display: flex; flex-direction: column; }
@@ -103,7 +101,7 @@ export default async function CategoryPage({ params }: Props) {
         .all-cats { padding: 40px 0 80px; border-top: 1px solid var(--border); }
         .all-cats-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
         .cats-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-        .cat-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; background: var(--surface); border: 1px solid var(--border); font-size: 0.85rem; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
+        .cat-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; background: var(--surface); border: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
         .cat-pill:hover { border-color: var(--accent); color: var(--accent); }
         .cat-pill.active { border-color: var(--accent); color: var(--accent); background: rgba(79,139,255,0.08); }
       `}</style>
@@ -139,7 +137,7 @@ export default async function CategoryPage({ params }: Props) {
         </section>
 
         <section className="all-cats">
-          <div className="all-cats-title">Browse other categories</div>
+          <div className="all-cats-title">Browse all categories</div>
           <div className="cats-grid">
             {Object.entries(CATEGORIES).map(([slug, c]) => (
               <a key={slug} href={`/category/${slug}`} className={`cat-pill${slug === category ? ' active' : ''}`}>
