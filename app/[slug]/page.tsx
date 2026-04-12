@@ -23,6 +23,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+
+function getCover(keyword?: string, slug?: string): { gradient: string; emoji: string } {
+  const k = ((keyword || '') + ' ' + (slug || '')).toLowerCase()
+  if (k.includes('photo') || k.includes('image') || k.includes('art'))    return { gradient: 'linear-gradient(135deg,#7c3aed,#db2777)', emoji: '🎨' }
+  if (k.includes('video'))                                                   return { gradient: 'linear-gradient(135deg,#dc2626,#ea580c)', emoji: '🎬' }
+  if (k.includes('music') || k.includes('audio') || k.includes('song'))    return { gradient: 'linear-gradient(135deg,#7c3aed,#4f46e5)', emoji: '🎵' }
+  if (k.includes('code') || k.includes('coding') || k.includes('developer')) return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '💻' }
+  if (k.includes('seo') || k.includes('marketing'))                         return { gradient: 'linear-gradient(135deg,#16a34a,#0891b2)', emoji: '📈' }
+  if (k.includes('resume') || k.includes('cover letter') || k.includes('job')) return { gradient: 'linear-gradient(135deg,#1d4ed8,#4338ca)', emoji: '💼' }
+  if (k.includes('design') || k.includes('logo'))                           return { gradient: 'linear-gradient(135deg,#db2777,#9333ea)', emoji: '✏️' }
+  if (k.includes('email'))                                                   return { gradient: 'linear-gradient(135deg,#0891b2,#1d4ed8)', emoji: '📧' }
+  if (k.includes('meeting') || k.includes('productivity'))                  return { gradient: 'linear-gradient(135deg,#0d9488,#16a34a)', emoji: '⚡' }
+  if (k.includes('education') || k.includes('essay') || k.includes('learn')) return { gradient: 'linear-gradient(135deg,#d97706,#dc2626)', emoji: '🎓' }
+  if (k.includes('social media'))                                            return { gradient: 'linear-gradient(135deg,#e11d48,#7c3aed)', emoji: '📱' }
+  if (k.includes('customer service'))                                        return { gradient: 'linear-gradient(135deg,#0891b2,#16a34a)', emoji: '💬' }
+  if (k.includes('translation'))                                             return { gradient: 'linear-gradient(135deg,#0d9488,#4338ca)', emoji: '🌍' }
+  if (k.includes('presentation'))                                            return { gradient: 'linear-gradient(135deg,#ea580c,#dc2626)', emoji: '🗂️' }
+  if (k.includes('summarizer') || k.includes('summariz'))                   return { gradient: 'linear-gradient(135deg,#4338ca,#7c3aed)', emoji: '📋' }
+  if (k.includes('detector') || k.includes('plagiarism'))                   return { gradient: 'linear-gradient(135deg,#dc2626,#b91c1c)', emoji: '🔍' }
+  if (k.includes('humanizer'))                                               return { gradient: 'linear-gradient(135deg,#0891b2,#7c3aed)', emoji: '🧑‍💼' }
+  if (k.includes('paraphraser') || k.includes('story') || k.includes('writer') || k.includes('writing')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '✍️' }
+  if (k.includes('avatar') || k.includes('face'))                           return { gradient: 'linear-gradient(135deg,#db2777,#ea580c)', emoji: '👤' }
+  if (k.includes('interior'))                                                return { gradient: 'linear-gradient(135deg,#d97706,#16a34a)', emoji: '🏠' }
+  if (k.includes('website') || k.includes('builder'))                       return { gradient: 'linear-gradient(135deg,#0891b2,#4f8bff)', emoji: '🌐' }
+  if (k.includes('chatgpt') || k.includes('claude') || k.includes('gemini') || k.includes('chatbot')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
+  if (k.includes('analytics') || k.includes('data'))                        return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '📊' }
+  return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
+}
+
 const CATEGORIES = [
   { icon: '✍️', label: 'AI Writing', href: '/category/ai-writing' },
   { icon: '🎨', label: 'AI Image', href: '/category/ai-image' },
@@ -154,6 +183,25 @@ export default async function ArticlePage({ params }: Props) {
         .comment-submit:disabled { opacity: 0.5; cursor: not-allowed; }
         .comment-error { color: #ef4444; font-size: 0.85rem; margin-bottom: 10px; }
         .comment-success { color: #22c55e; font-size: 0.85rem; margin-bottom: 10px; }
+
+        /* ── Related Articles ── */
+        .related-section { margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--border); }
+        .related-title { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 24px; letter-spacing: -0.02em; }
+        .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        @media (max-width: 700px) { .related-grid { grid-template-columns: 1fr; } }
+        @media (min-width: 701px) and (max-width: 1000px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+        .related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: border-color 0.15s, transform 0.15s; }
+        .related-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .related-cover { height: 100px; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+        .related-cover-emoji { font-size: 2.2rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+        .related-cover-shine { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%); }
+        .related-cover-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 18px 18px; }
+        .related-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+        .related-tag { display: inline-block; padding: 2px 8px; border-radius: 20px; background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.2); color: #9d7dfc; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+        .related-card-title { font-size: 0.9rem; font-weight: 700; line-height: 1.4; color: var(--text); margin-bottom: auto; }
+        .related-card-title:hover { color: var(--accent); }
+        .related-read { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; font-size: 0.78rem; color: var(--accent); font-weight: 600; }
+
         .site-footer { border-top: 1px solid var(--border); padding: 24px 0; margin-top: 60px; }
         .site-footer p { color: var(--muted); font-size: 0.82rem; }
       `}</style>
@@ -177,6 +225,42 @@ export default async function ArticlePage({ params }: Props) {
           </footer>
 
           <ArticleComments slug={post.slug} />
+
+          {/* ── Related Articles ── */}
+          {(() => {
+            const all = getAllPosts()
+            const others = all.filter(p => p.slug !== post.slug)
+            // Pick up to 3: prefer same keyword category, then fill with recent
+            const same = others.filter(p => p.keyword && post.keyword && p.keyword === post.keyword)
+            const rest = others.filter(p => !same.includes(p))
+            const picks = [...same, ...rest].slice(0, 3)
+            if (picks.length === 0) return null
+            return (
+              <section className="related-section">
+                <h2 className="related-title">More Articles You'll Like</h2>
+                <div className="related-grid">
+                  {picks.map(p => {
+                    const cv = getCover(p.keyword, p.slug)
+                    return (
+                      <a key={p.slug} href={`/${p.slug}`} className="related-card">
+                        <div className="related-cover" style={{ background: cv.gradient }}>
+                          <div className="related-cover-dots" />
+                          <div className="related-cover-shine" />
+                          <span className="related-cover-emoji">{cv.emoji}</span>
+                        </div>
+                        <div className="related-body">
+                          {p.keyword && <span className="related-tag">{p.keyword}</span>}
+                          <div className="related-card-title">{p.title}</div>
+                          <span className="related-read">Read article →</span>
+                        </div>
+                      </a>
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })()}
+
         </article>
 
         {/* ── Sidebar (desktop only) ── */}
