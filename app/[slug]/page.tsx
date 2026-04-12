@@ -23,6 +23,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+const CATEGORIES = [
+  { icon: '✍️', label: 'AI Writing', href: '/category/ai-writing' },
+  { icon: '🎨', label: 'AI Image', href: '/category/ai-image' },
+  { icon: '💻', label: 'AI Coding', href: '/category/ai-coding' },
+  { icon: '🤖', label: 'Chatbots', href: '/category/chatbots' },
+  { icon: '📊', label: 'Analytics', href: '/category/analytics' },
+  { icon: '🎵', label: 'Audio & Video', href: '/category/audio-video' },
+  { icon: '🖼️', label: 'AI Photo Editing', href: '/category/ai-photo-editing' },
+  { icon: '🧑‍💼', label: 'AI Humanizer', href: '/category/ai-humanizer' },
+  { icon: '📝', label: 'AI Paraphraser', href: '/category/ai-paraphraser' },
+  { icon: '🎶', label: 'AI Music', href: '/category/ai-music' },
+  { icon: '🎭', label: 'AI Face Swap', href: '/category/ai-face-swap' },
+  { icon: '🎓', label: 'AI Essay Writer', href: '/category/ai-essay-writer' },
+  { icon: '🎬', label: 'AI Video Editor', href: '/category/ai-video-editing' },
+  { icon: '🌐', label: 'AI Website Builder', href: '/category/ai-website-builder' },
+  { icon: '🔍', label: 'AI Plagiarism Checker', href: '/category/ai-plagiarism-checker' },
+  { icon: '📖', label: 'AI Story Generator', href: '/category/ai-story-generator' },
+  { icon: '👤', label: 'AI Avatar Generator', href: '/category/ai-avatar-generator' },
+  { icon: '🏠', label: 'AI Interior Design', href: '/category/ai-interior-design' },
+  { icon: '💼', label: 'AI Cover Letter', href: '/category/ai-cover-letter' },
+  { icon: '🎯', label: 'AI Logo Generator', href: '/category/ai-logo-generator' },
+  { icon: '🕵️', label: 'AI Detector', href: '/category/ai-detector' },
+  { icon: '📋', label: 'AI Summarizer', href: '/category/ai-summarizer' },
+  { icon: '🎥', label: 'AI Video Generator', href: '/category/ai-video-generator' },
+  { icon: '📄', label: 'AI Resume Builder', href: '/category/ai-resume-builder' },
+  { icon: '🗂️', label: 'AI Presentation', href: '/category/ai-presentation' },
+  { icon: '🌍', label: 'AI Translation', href: '/category/ai-translation' },
+  { icon: '💬', label: 'AI Customer Service', href: '/category/ai-customer-service' },
+  { icon: '✏️', label: 'AI Design Tools', href: '/category/ai-design-tools' },
+  { icon: '📈', label: 'AI SEO Tools', href: '/category/ai-seo-tools' },
+  { icon: '📧', label: 'AI Email Writer', href: '/category/ai-email' },
+  { icon: '🗓️', label: 'AI Meeting Tools', href: '/category/ai-meeting-tools' },
+  { icon: '⚡', label: 'AI Productivity', href: '/category/ai-productivity' },
+  { icon: '🏫', label: 'AI Education', href: '/category/ai-education' },
+  { icon: '📣', label: 'AI Marketing', href: '/category/ai-marketing' },
+  { icon: '📱', label: 'AI Social Media', href: '/category/ai-social-media' },
+]
+
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
@@ -49,14 +87,14 @@ export default async function ArticlePage({ params }: Props) {
         }
         body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.7; font-size: 16px; }
         a { text-decoration: none; color: inherit; }
-        .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
-        .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 10; }
-        .site-brand { font-size: 1.1rem; font-weight: 700; color: var(--text); }
-        .site-brand:hover { color: var(--accent); }
-        .main-content { padding: 40px 24px 80px; }
+
+        /* ── Page layout ── */
+        .page-wrapper { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; display: grid; grid-template-columns: 1fr 260px; gap: 48px; align-items: start; }
+        @media (max-width: 900px) { .page-wrapper { grid-template-columns: 1fr; } .article-sidebar { display: none; } }
+
+        /* ── Article ── */
         .post-meta { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
         .keyword-pill { display: inline-block; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; background: rgba(74,124,255,0.12); border: 1px solid rgba(74,124,255,0.25); color: #7ca9ff; margin-right: 8px; }
-        .article { max-width: 720px; }
         .article-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
         .article-header h1 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 800; margin: 8px 0 12px; line-height: 1.3; }
         .article-desc { color: var(--muted); font-size: 1rem; margin-bottom: 12px; }
@@ -79,8 +117,23 @@ export default async function ArticlePage({ params }: Props) {
         .article-footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
         .article-footer a { color: var(--muted); font-size: 0.9rem; }
         .article-footer a:hover { color: var(--accent); }
-        .site-footer { border-top: 1px solid var(--border); padding: 24px 0; margin-top: 60px; }
-        .site-footer p { color: var(--muted); font-size: 0.82rem; }
+
+        /* ── Sidebar ── */
+        .article-sidebar { position: sticky; top: 80px; }
+        .sidebar-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .sidebar-title { padding: 14px 16px; font-size: 0.72rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .sidebar-cat-list { display: flex; flex-direction: column; }
+        .sidebar-cat-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; color: #b0b8d0; font-size: 0.83rem; font-weight: 500; border-bottom: 1px solid rgba(30,37,53,0.6); transition: background 0.1s, color 0.1s; }
+        .sidebar-cat-item:last-child { border-bottom: none; }
+        .sidebar-cat-item:hover { background: rgba(79,139,255,0.08); color: #fff; }
+        .sidebar-cat-item:hover .sidebar-cat-arrow { opacity: 1; }
+        .sidebar-cat-icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
+        .sidebar-cat-label { flex: 1; }
+        .sidebar-cat-arrow { font-size: 0.7rem; color: var(--accent); opacity: 0; transition: opacity 0.1s; }
+        .sidebar-viewall { display: block; padding: 12px 16px; text-align: center; font-size: 0.78rem; color: var(--accent); font-weight: 600; border-top: 1px solid var(--border); background: rgba(79,139,255,0.04); }
+        .sidebar-viewall:hover { background: rgba(79,139,255,0.1); }
+
+        /* ── Comments ── */
         .comments-section { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); }
         .comments-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
         .comments-empty { color: var(--muted); font-size: 0.9rem; margin-bottom: 24px; }
@@ -101,26 +154,48 @@ export default async function ArticlePage({ params }: Props) {
         .comment-submit:disabled { opacity: 0.5; cursor: not-allowed; }
         .comment-error { color: #ef4444; font-size: 0.85rem; margin-bottom: 10px; }
         .comment-success { color: #22c55e; font-size: 0.85rem; margin-bottom: 10px; }
+        .site-footer { border-top: 1px solid var(--border); padding: 24px 0; margin-top: 60px; }
+        .site-footer p { color: var(--muted); font-size: 0.82rem; }
       `}</style>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
 
-      <article className="article">
-        <header className="article-header">
-          <div className="post-meta">{post.date}</div>
-          <h1>{post.title}</h1>
-          {post.description && <p className="article-desc">{post.description}</p>}
-          {post.keyword && <span className="keyword-pill">{post.keyword}</span>}
-        </header>
+      <div className="page-wrapper">
+        {/* ── Main article ── */}
+        <article>
+          <header className="article-header">
+            <div className="post-meta">{post.date}</div>
+            <h1>{post.title}</h1>
+            {post.description && <p className="article-desc">{post.description}</p>}
+            {post.keyword && <span className="keyword-pill">{post.keyword}</span>}
+          </header>
 
-        <div className="article-body" dangerouslySetInnerHTML={{ __html: html }} />
+          <div className="article-body" dangerouslySetInnerHTML={{ __html: html }} />
 
-        <footer className="article-footer">
-          <a href="/">← Back to all articles</a>
-        </footer>
+          <footer className="article-footer">
+            <a href="/">← Back to all articles</a>
+          </footer>
 
-        <ArticleComments slug={post.slug} />
-      </article>
+          <ArticleComments slug={post.slug} />
+        </article>
+
+        {/* ── Sidebar (desktop only) ── */}
+        <aside className="article-sidebar">
+          <div className="sidebar-box">
+            <div className="sidebar-title">Browse Categories</div>
+            <div className="sidebar-cat-list">
+              {CATEGORIES.map((cat) => (
+                <a key={cat.href} href={cat.href} className="sidebar-cat-item">
+                  <span className="sidebar-cat-icon">{cat.icon}</span>
+                  <span className="sidebar-cat-label">{cat.label}</span>
+                  <span className="sidebar-cat-arrow">›</span>
+                </a>
+              ))}
+            </div>
+            <a href="/categories" className="sidebar-viewall">View all categories →</a>
+          </div>
+        </aside>
+      </div>
     </>
   );
 }
