@@ -56,6 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: cat.name + ' Tools — Best AI Tools 2025',
     description: cat.description,
+    alternates: { canonical: `/category/${category}` },
   }
 }
 
