@@ -118,7 +118,7 @@ export default async function ArticlePage({ params }: Props) {
         :root{--bg:#080b14;--surface:#0f1420;--border:#1e2535;--text:#e4e8f4;--muted:#7a82a0;--accent:#4f8bff;--radius:10px}
         body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7;font-size:16px}
         a{text-decoration:none;color:inherit}
-        .page-wrapper{max-width:1200px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start}
+        .page-wrapper{max-width:1200px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 280px;gap:80px;align-items:start}
         @media(max-width:900px){.page-wrapper{grid-template-columns:1fr}.article-sidebar{display:none!important}}
         .post-meta{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
         .keyword-pill{display:inline-block;font-size:.72rem;padding:3px 10px;border-radius:20px;background:rgba(74,124,255,.12);border:1px solid rgba(74,124,255,.25);color:#7ca9ff;margin-right:8px}
@@ -144,7 +144,7 @@ export default async function ArticlePage({ params }: Props) {
         .article-footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border)}
         .article-footer a{color:var(--muted);font-size:.9rem}
         .article-footer a:hover{color:var(--accent)}
-        .article-sidebar{position:sticky;top:80px}
+        .article-sidebar{position:sticky;top:80px;padding-left:8px;border-left:1px solid var(--border)}
         .sidebar-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
         .sidebar-title{padding:14px 16px;font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
         .sidebar-cat-list{display:flex;flex-direction:column}
