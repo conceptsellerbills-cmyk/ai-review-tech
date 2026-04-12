@@ -1,5 +1,6 @@
 import { getAllPosts } from "../lib/posts";
 import type { Metadata } from "next";
+import NewsletterForm from '../components/NewsletterForm'
 
 export const metadata: Metadata = {
   title: "Best AI Tools Reviews & Comparisons 2025 — ai-review.tech",
@@ -478,10 +479,7 @@ export default function HomePage() {
         <div className="newsletter-section">
           <h2>Stay Ahead of the AI Curve</h2>
           <p>Get weekly roundups of the latest AI tool reviews, comparisons and expert guides.</p>
-          <div className="newsletter-form">
-            <input className="newsletter-input" type="email" placeholder="your@email.com" />
-            <button className="newsletter-btn">Subscribe →</button>
-          </div>
+          <NewsletterForm />
         </div>
 
         {/* ── CTA ── */}
