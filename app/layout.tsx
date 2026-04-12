@@ -14,11 +14,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <style>{`
+          @media (max-width: 480px) {
+            .rec-label { display: none; }
+            .rec-btn { padding: 8px 12px !important; }
+          }
+        `}</style>
         <header className="site-header">
-          <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
 
             {/* ── LOGO ── */}
-            <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: "10px", textDecoration: "none", flexShrink: 0 }}>
               <span style={{
                 width: "36px", height: "36px", borderRadius: "10px",
                 background: "linear-gradient(135deg, #4f8bff 0%, #7c5cfc 100%)",
@@ -44,27 +50,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   background: "linear-gradient(135deg, #ffffff 30%, #4f8bff 100%)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}>AI Review</span>
-                <span style={{
-                  fontSize: "0.58rem", fontWeight: 600, letterSpacing: "0.12em",
-                  textTransform: "uppercase", color: "#7a82a0",
-                }}>Tech</span>
+                <span style={{ fontSize: "0.58rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#7a82a0" }}>Tech</span>
               </span>
             </a>
 
             {/* ── NAV ── */}
-            <nav style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <nav style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
               <CategoriesDropdown />
               <a
                 href="/#recommended-tools"
+                className="rec-btn"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: "6px",
-                  padding: "8px 18px", borderRadius: "50px",
+                  padding: "8px 16px", borderRadius: "50px",
                   background: "linear-gradient(135deg, #4f8bff, #7c5cfc)",
                   color: "#fff", fontWeight: 700, fontSize: "0.85rem",
-                  textDecoration: "none", whiteSpace: "nowrap",
+                  textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
                 }}
               >
-                🔥 Recommended Tools
+                🔥<span className="rec-label"> Recommended</span>
               </a>
             </nav>
           </div>
