@@ -5,6 +5,7 @@ import NewsletterForm from '../components/NewsletterForm'
 export const metadata: Metadata = {
   title: "Best AI Tools Reviews & Comparisons 2025 — ai-review.tech",
   description: "Independent, in-depth reviews of 200+ AI tools for writing, coding, images and more.",
+  alternates: { canonical: "/" },
 };
 
 const STARS = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
