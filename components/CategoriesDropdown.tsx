@@ -45,127 +45,155 @@ export default function CategoriesDropdown() {
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
+  // Close on ESC
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      {/* Trigger button */}
-      <button
-        onClick={() => setOpen(!open)}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '8px 16px',
-          borderRadius: '50px',
-          background: open ? 'rgba(79,139,255,0.15)' : 'rgba(255,255,255,0.06)',
-          border: '1px solid ' + (open ? 'rgba(79,139,255,0.5)' : 'rgba(255,255,255,0.12)'),
-          color: open ? '#4f8bff' : '#e4e8f4',
-          fontWeight: 600,
-          fontSize: '0.85rem',
-          cursor: 'pointer',
-          whiteSpace: 'nowrap',
-          transition: 'all 0.15s',
-        }}
-      >
-        <span style={{ fontSize: '0.75rem' }}>⊞</span>
-        Categories
-        <span style={{
-          fontSize: '0.6rem',
-          marginLeft: '2px',
-          display: 'inline-block',
-          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: 'transform 0.2s',
-        }}>▼</span>
-      </button>
+    <>
+      <style>{`
+        @keyframes dropIn {
+          from { opacity: 0; transform: translateY(-6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .cat-dropdown-panel {
+          position: fixed;
+          top: 60px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100vw - 24px);
+          max-width: 420px;
+          background: #0f1420;
+          border: 1px solid #1e2535;
+          border-radius: 14px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(79,139,255,0.08);
+          z-index: 9999;
+          overflow: hidden;
+          animation: dropIn 0.15s ease;
+        }
+        .cat-dropdown-header {
+          padding: 12px 16px 10px;
+          border-bottom: 1px solid #1e2535;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .cat-dropdown-title {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #4f8bff;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .cat-dropdown-viewall {
+          font-size: 0.72rem;
+          color: #7a82a0;
+          text-decoration: none;
+        }
+        .cat-dropdown-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2px;
+          padding: 8px;
+          max-height: 60vh;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .cat-dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 12px;
+          border-radius: 8px;
+          color: #b0b8d0;
+          font-size: 0.83rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: background 0.1s, color 0.1s;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .cat-dropdown-item:hover,
+        .cat-dropdown-item:active {
+          background: rgba(79,139,255,0.12);
+          color: #fff;
+        }
+        .cat-dropdown-item-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .cat-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 8px 14px;
+          border-radius: 50px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #e4e8f4;
+          font-weight: 600;
+          font-size: 0.85rem;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: all 0.15s;
+        }
+        .cat-btn[data-open="true"] {
+          background: rgba(79,139,255,0.15);
+          border-color: rgba(79,139,255,0.5);
+          color: #4f8bff;
+        }
+        .cat-btn-arrow {
+          font-size: 0.55rem;
+          transition: transform 0.2s;
+          display: inline-block;
+        }
+        .cat-btn[data-open="true"] .cat-btn-arrow { transform: rotate(180deg); }
+        /* overlay for mobile tap-outside */
+        .cat-overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          z-index: 9998;
+        }
+        .cat-overlay[data-open="true"] { display: block; }
+        @media (max-width: 480px) {
+          .cat-btn-label { display: none; }
+          .cat-btn { padding: 8px 12px; gap: 0; }
+        }
+      `}</style>
 
-      {/* Dropdown panel */}
-      {open && (
-        <div style={{
-          position: 'absolute',
-          top: 'calc(100% + 10px)',
-          right: 0,
-          width: '340px',
-          background: '#0f1420',
-          border: '1px solid #1e2535',
-          borderRadius: '14px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(79,139,255,0.08)',
-          zIndex: 100,
-          overflow: 'hidden',
-          animation: 'dropIn 0.15s ease',
-        }}>
-          <style>{`
-            @keyframes dropIn {
-              from { opacity: 0; transform: translateY(-8px); }
-              to   { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
+      {/* Tap-outside overlay */}
+      <div className="cat-overlay" data-open={open ? 'true' : 'false'} onClick={() => setOpen(false)} />
 
-          {/* Header */}
-          <div style={{
-            padding: '14px 18px 10px',
-            borderBottom: '1px solid #1e2535',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4f8bff', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              All Categories
-            </span>
-            <a href="/categories" style={{ fontSize: '0.72rem', color: '#7a82a0' }}
-              onClick={() => setOpen(false)}>
-              View all →
-            </a>
+      <div ref={ref} style={{ position: 'relative' }}>
+        <button className="cat-btn" data-open={open ? 'true' : 'false'} onClick={() => setOpen(!open)} aria-label="Browse categories">
+          <span style={{ fontSize: '1rem' }}>⊞</span>
+          <span className="cat-btn-label">Categories</span>
+          <span className="cat-btn-arrow">▼</span>
+        </button>
+
+        {open && (
+          <div className="cat-dropdown-panel">
+            <div className="cat-dropdown-header">
+              <span className="cat-dropdown-title">All Categories</span>
+              <a href="/categories" className="cat-dropdown-viewall" onClick={() => setOpen(false)}>View all →</a>
+            </div>
+            <div className="cat-dropdown-grid">
+              {CATEGORIES.map((cat) => (
+                <a key={cat.href} href={cat.href} className="cat-dropdown-item" onClick={() => setOpen(false)}>
+                  <span className="cat-dropdown-item-icon">{cat.icon}</span>
+                  <span>{cat.label}</span>
+                </a>
+              ))}
+            </div>
           </div>
-
-          {/* Grid of categories */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '2px',
-            padding: '8px',
-            maxHeight: '420px',
-            overflowY: 'auto',
-          }}>
-            {CATEGORIES.map((cat) => (
-              <a
-                key={cat.href}
-                href={cat.href}
-                onClick={() => setOpen(false)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '9px 12px',
-                  borderRadius: '8px',
-                  color: '#b0b8d0',
-                  fontSize: '0.82rem',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  transition: 'background 0.1s, color 0.1s',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(79,139,255,0.1)'
-                  ;(e.currentTarget as HTMLElement).style.color = '#fff'
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.background = 'transparent'
-                  ;(e.currentTarget as HTMLElement).style.color = '#b0b8d0'
-                }}
-              >
-                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{cat.icon}</span>
-                <span>{cat.label}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   )
 }
