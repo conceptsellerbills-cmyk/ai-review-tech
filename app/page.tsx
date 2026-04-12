@@ -410,7 +410,7 @@ export default function HomePage() {
         </section>
 
         {/* ── RECOMMENDED TOOLS (AFFILIATE) ── */}
-        <section className="affiliate-section">
+        <section id="recommended-tools" className="affiliate-section">
           <div className="section-eyebrow">Recommended Tools</div>
           <div className="section-header">
             <h2 className="section-title">Tools We Actually Use & Recommend</h2>
