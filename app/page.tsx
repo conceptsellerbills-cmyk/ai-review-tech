@@ -298,7 +298,7 @@ export default function HomePage() {
         <section className="section" style={{ paddingBottom: 40 }}>
           <div className="section-eyebrow">Trending Now</div>
           <div className="trending-row">
-            {([{"label":"ChatGPT vs Claude","hot":true,"href":"/chatgpt-vs-claude"},{"label":"Best AI Writers","hot":true,"href":"/best-ai-writing-tools"},{"label":"AI Image Generators","href":"/ai-image-generators"},{"label":"Coding Assistants","href":"/ai-coding-tools"},{"label":"AI for SEO","href":"/ai-seo-tools"},{"label":"Free AI Tools","href":"/free-ai-tools"},{"label":"GPT-4o Review","hot":true,"href":"/gpt-4o-review"}] as {label:string,hot?:boolean,href:string}[]).map((t) => (
+            {([{"label":"ChatGPT vs Claude","hot":true,"href":"/chatgpt-vs-claude-vs-gemini"},{"label":"Best AI Writers","hot":true,"href":"/best-ai-writing-tools-2025"},{"label":"AI Image Generators","href":"/best-ai-image-generators-2025"},{"label":"Coding Assistants","href":"/best-ai-coding-assistants-2025"},{"label":"AI for SEO","href":"/best-ai-seo-tools-2025"},{"label":"Free AI Tools","href":"/best-free-ai-tools-2025"},{"label":"GPT-4o Review","hot":true,"href":"/chatgpt-review-2025"}] as {label:string,hot?:boolean,href:string}[]).map((t) => (
               <a key={t.label} href={t.href} className={"trending-pill" + (t.hot ? " trending-pill-hot" : "")}>
                 {t.hot && "🔥 "}{t.label}
               </a>
@@ -313,7 +313,7 @@ export default function HomePage() {
             <h2 className="section-title">Top AI Tools Right Now</h2>
           </div>
           <div className="picks-grid">
-            {([{"badge":"Best Overall","badgeType":"gold","icon":"🤖","title":"ChatGPT (GPT-4o)","desc":"The most capable all-around AI assistant for writing, analysis and coding tasks.","rating":5,"href":"/chatgpt-review"},{"badge":"Best for Writing","badgeType":"silver","icon":"✍️","title":"Claude 3.5 Sonnet","desc":"Exceptional at long-form content, nuanced writing and following complex instructions.","rating":5,"href":"/claude-review"},{"badge":"Best Value","badgeType":"bronze","icon":"💡","title":"Gemini Advanced","desc":"Google's flagship AI with deep integration across productivity tools and search.","rating":4,"href":"/gemini-review"}] as {badge:string,badgeType:string,icon:string,title:string,desc:string,rating:number,href:string}[]).map((p, i) => (
+            {([{"badge":"Best Overall","badgeType":"gold","icon":"🤖","title":"ChatGPT (GPT-4o)","desc":"The most capable all-around AI assistant for writing, analysis and coding tasks.","rating":5,"href":"/chatgpt-review-2025"},{"badge":"Best for Writing","badgeType":"silver","icon":"✍️","title":"Claude 3.5 Sonnet","desc":"Exceptional at long-form content, nuanced writing and following complex instructions.","rating":5,"href":"/claude-review-2025"},{"badge":"Best Value","badgeType":"bronze","icon":"💡","title":"Gemini Advanced","desc":"Google's flagship AI with deep integration across productivity tools and search.","rating":4,"href":"/gemini-review-2025"}] as {badge:string,badgeType:string,icon:string,title:string,desc:string,rating:number,href:string}[]).map((p, i) => (
               <div key={p.title} className={"pick-card" + (i === 0 ? " pick-card--featured" : "")}>
                 <span className={"pick-badge pick-badge--" + p.badgeType}>{p.badge}</span>
                 <span className="pick-icon">{p.icon}</span>
