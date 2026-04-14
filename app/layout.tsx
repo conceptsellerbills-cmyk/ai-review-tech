@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import CategoriesDropdown from "../components/CategoriesDropdown";
 
 const SITE_NAME = "AI Review";
 
@@ -8,6 +7,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.ai-review.tech"),
   title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
   description: "Expert guides, reviews and tips.",
+  alternates: { canonical: "/" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,61 +15,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <style>{`
-          @media (max-width: 480px) {
-            .rec-label { display: none; }
-            .rec-btn { padding: 8px 12px !important; }
-          }
+          .site-header{background:#09080f;border-bottom:1px solid rgba(255,255,255,0.07);padding:14px 0;position:sticky;top:0;z-index:100}
+          .header-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:24px}
+          .site-brand{font-size:1.1rem;font-weight:800;color:#fff;text-decoration:none;white-space:nowrap}
+          .site-brand:hover{color:#a78bfa}
+          .cat-nav{position:relative}
+          .cat-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;font-size:0.875rem;font-weight:600;padding:8px 16px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:background 0.15s,border-color 0.15s}
+          .cat-btn:hover,.cat-nav:focus-within .cat-btn{background:rgba(255,255,255,0.1);border-color:#a78bfa;color:#a78bfa}
+          .cat-btn svg{transition:transform 0.2s}
+          .cat-nav:hover .cat-btn svg,.cat-nav:focus-within .cat-btn svg{transform:rotate(180deg)}
+          .cat-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#1a1d2e;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px;min-width:220px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:200;max-height:70vh;overflow-y:auto}
+          .cat-nav:hover .cat-dropdown,.cat-nav:focus-within .cat-dropdown{display:block}
+          .cat-dropdown a{display:block;padding:9px 14px;border-radius:8px;color:#c8cad8;font-size:0.875rem;text-decoration:none;transition:background 0.1s,color 0.1s;white-space:nowrap}
+          .cat-dropdown a:hover{background:rgba(255,255,255,0.06);color:#a78bfa}
+          .site-footer{border-top:1px solid rgba(255,255,255,0.07);padding:24px 0;margin-top:60px}
+          .site-footer p{color:#6b7280;font-size:0.82rem;text-align:center}
         `}</style>
         <header className="site-header">
-          <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-
-            {/* ── LOGO ── */}
-            <a href="/" style={{ display: "inline-flex", alignItems: "center", gap: "10px", textDecoration: "none", flexShrink: 0 }}>
-              <span style={{
-                width: "36px", height: "36px", borderRadius: "10px",
-                background: "linear-gradient(135deg, #4f8bff 0%, #7c5cfc 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                flexShrink: 0, boxShadow: "0 0 16px rgba(79,139,255,0.4)",
-              }}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="5" y="5" width="10" height="10" rx="2" stroke="white" strokeWidth="1.5" fill="none"/>
-                  <circle cx="10" cy="10" r="2" fill="white"/>
-                  <line x1="5" y1="8" x2="2" y2="8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="5" y1="12" x2="2" y2="12" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="15" y1="8" x2="18" y2="8" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="15" y1="12" x2="18" y2="12" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="8" y1="5" x2="8" y2="2" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="12" y1="5" x2="12" y2="2" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="8" y1="15" x2="8" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                  <line x1="12" y1="15" x2="12" y2="18" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </span>
-              <span style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
-                <span style={{
-                  fontSize: "1.05rem", fontWeight: 900, letterSpacing: "-0.03em",
-                  background: "linear-gradient(135deg, #ffffff 30%, #4f8bff 100%)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-                }}>AI Review</span>
-                <span style={{ fontSize: "0.58rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#7a82a0" }}>Tech</span>
-              </span>
-            </a>
-
-            {/* ── NAV ── */}
-            <nav style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
-              <CategoriesDropdown />
-              <a
-                href="/#recommended-tools"
-                className="rec-btn"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: "6px",
-                  padding: "8px 16px", borderRadius: "50px",
-                  background: "linear-gradient(135deg, #4f8bff, #7c5cfc)",
-                  color: "#fff", fontWeight: 700, fontSize: "0.85rem",
-                  textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0,
-                }}
-              >
-                🔥<span className="rec-label"> Recommended</span>
-              </a>
+          <div className="header-inner">
+            <a href="/" className="site-brand">{SITE_NAME}</a>
+            <nav className="cat-nav" tabIndex={0}>
+              <button className="cat-btn" aria-haspopup="true">
+                Categories
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M2 4l4 4 4-4"/></svg>
+              </button>
+              <div className="cat-dropdown" role="menu">
+              <a href="/category/ai-writing">✍️ AI Writing Tools</a>
+              <a href="/category/ai-image">🎨 AI Image Generators</a>
+              <a href="/category/ai-coding">💻 AI Coding Assistants</a>
+              <a href="/category/ai-video">🎬 AI Video Tools</a>
+              <a href="/category/ai-chatbots">🤖 AI Chatbots</a>
+              <a href="/category/ai-audio">🔊 AI Voice & Audio</a>
+              <a href="/category/ai-business">📊 AI for Business</a>
+              <a href="/category/ai-education">🎓 AI for Education</a>
+              <a href="/category/ai-ecommerce">🛒 AI for E-commerce</a>
+              <a href="/category/ai-mobile">📱 AI Mobile Apps</a>
+              <a href="/category/ai-seo">🔍 AI SEO Tools</a>
+              <a href="/category/ai-email">📧 AI Email Tools</a>
+              </div>
             </nav>
           </div>
         </header>
