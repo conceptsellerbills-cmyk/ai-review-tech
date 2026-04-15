@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           .cat-btn:hover,.cat-nav:focus-within .cat-btn{background:rgba(255,255,255,0.1);border-color:#a78bfa;color:#a78bfa}
           .cat-btn svg{transition:transform 0.2s}
           .cat-nav:hover .cat-btn svg,.cat-nav:focus-within .cat-btn svg{transform:rotate(180deg)}
-          .cat-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#1a1d2e;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px;min-width:220px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:200;max-height:70vh;overflow-y:auto}
+          .cat-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#1a1d2e;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px;min-width:240px;box-shadow:0 16px 48px rgba(0,0,0,0.5);z-index:200;max-height:70vh;overflow-y:auto}
           .cat-nav:hover .cat-dropdown,.cat-nav:focus-within .cat-dropdown{display:block}
           .cat-dropdown a{display:block;padding:9px 14px;border-radius:8px;color:#c8cad8;font-size:0.875rem;text-decoration:none;transition:background 0.1s,color 0.1s;white-space:nowrap}
           .cat-dropdown a:hover{background:rgba(255,255,255,0.06);color:#a78bfa}
@@ -49,15 +49,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/category/ai-writing">✍️ AI Writing Tools</a>
               <a href="/category/ai-image">🎨 AI Image Generators</a>
               <a href="/category/ai-coding">💻 AI Coding Assistants</a>
-              <a href="/category/ai-video">🎬 AI Video Tools</a>
-              <a href="/category/ai-chatbots">🤖 AI Chatbots</a>
-              <a href="/category/ai-audio">🔊 AI Voice & Audio</a>
-              <a href="/category/ai-business">📊 AI for Business</a>
-              <a href="/category/ai-education">🎓 AI for Education</a>
-              <a href="/category/ai-ecommerce">🛒 AI for E-commerce</a>
-              <a href="/category/ai-mobile">📱 AI Mobile Apps</a>
-              <a href="/category/ai-seo">🔍 AI SEO Tools</a>
-              <a href="/category/ai-email">📧 AI Email Tools</a>
+              <a href="/category/chatbots">🤖 AI Chatbots</a>
+              <a href="/category/analytics">📊 AI Analytics</a>
+              <a href="/category/audio-video">🎵 AI Voice & Audio</a>
+              <a href="/category/ai-photo-tools">📷 AI Photo Tools</a>
+              <a href="/category/ai-humanizer">🧠 AI Humanizer</a>
+              <a href="/category/ai-paraphraser">🔄 AI Paraphraser</a>
+              <a href="/category/ai-music-generator">🎸 AI Music Generator</a>
+              <a href="/category/ai-song-generator">🎤 AI Song Generator</a>
+              <a href="/category/ai-face-tools">🪞 AI Face Tools</a>
+              <a href="/category/ai-essay-writer">📝 AI Essay Writer</a>
+              <a href="/category/ai-video-editor">🎬 AI Video Editor</a>
+              <a href="/category/ai-website-builder">🌐 AI Website Builder</a>
+              <a href="/category/ai-plagiarism-checker">🔍 AI Plagiarism Checker</a>
+              <a href="/category/ai-story-generator">📚 AI Story Generator</a>
+              <a href="/category/ai-avatar-generator">👤 AI Avatar Generator</a>
+              <a href="/category/ai-interior-design">🏠 AI Interior Design</a>
+              <a href="/category/ai-cover-letter">📄 AI Cover Letter</a>
+              <a href="/category/ai-logo-generator">✨ AI Logo Generator</a>
+              <a href="/category/ai-detector">🕵️ AI Detector</a>
+              <a href="/category/ai-summarizer">📋 AI Summarizer</a>
+              <a href="/category/ai-video">🎥 AI Video Generator</a>
+              <a href="/category/ai-resume-builder">📑 AI Resume Builder</a>
+              <a href="/category/ai-presentation">🖥️ AI Presentation</a>
+              <a href="/category/ai-translation">🌍 AI Translation</a>
+              <a href="/category/ai-customer-service">💬 AI Customer Service</a>
+              <a href="/category/ai-design-tools">🖌️ AI Design Tools</a>
+              <a href="/category/ai-seo-tools">🔎 AI SEO Tools</a>
+              <a href="/category/ai-email-tools">📧 AI Email Tools</a>
+              <a href="/category/ai-meeting-tools">📅 AI Meeting Tools</a>
+              <a href="/category/ai-productivity">⚡ AI Productivity</a>
+              <a href="/category/ai-education">🎓 AI Education</a>
+              <a href="/category/ai-marketing">📈 AI Marketing</a>
+              <a href="/category/ai-social-media">📱 AI Social Media</a>
               </div>
             </nav>
           </div>
