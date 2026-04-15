@@ -96,7 +96,7 @@ export default async function CategoryPage({ params }: Props) {
 
   const allPosts = getAllPosts()
   const posts = allPosts.filter((p) => {
-    const text = (p.title + ' ' + (p.keyword || '') + ' ' + (p.description || '') + ' ' + p.slug).toLowerCase()
+    const text = (p.title + ' ' + (p.keyword || '') + ' ' + (p.description || '') + ' ' + p.slug + ' ' + p.slug.replace(/-/g, ' ')).toLowerCase()
     return cat.keywords.some((kw) => text.includes(kw.toLowerCase()))
   })
 
