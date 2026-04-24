@@ -1,550 +1,213 @@
-import { getAllPosts } from "../lib/posts";
-import type { Metadata } from "next";
+import dynamic from 'next/dynamic'
+import { getAllPosts } from '../lib/posts'
+import type { Metadata } from 'next'
 import NewsletterForm from '../components/NewsletterForm'
 
+const HeroScene3D = dynamic(
+  () => import('../components/HeroScene3D').then((m) => m.HeroScene3D),
+  { ssr: false }
+)
+
 export const metadata: Metadata = {
-  title: "Best AI Tools Reviews & Comparisons 2025 — ai-review.tech",
-  description: "Independent, in-depth reviews of 200+ AI tools for writing, coding, images and more.",
-  alternates: { canonical: "/" },
-};
+  title: 'Best AI Tools Reviews & Comparisons 2025 — ai-review.tech',
+  description: 'Independent, in-depth reviews of 200+ AI tools for writing, coding, images and more.',
+  alternates: { canonical: '/' },
+}
 
-const STARS = (n: number) => "★".repeat(n) + "☆".repeat(5 - n);
-
-const AFFILIATE_TOOLS = [
-  {
-    name: "JobCopilot",
-    icon: "🚀",
-    tagline: "AI-Powered Job Applications on Autopilot",
-    description:
-      "JobCopilot automatically applies to hundreds of jobs tailored to your profile every day — so you can focus on interviews, not job boards. Set your preferences once and let AI do the heavy lifting.",
-    features: ["Auto-applies to 1000+ job boards", "AI-tailored cover letters", "Smart job matching by skills & salary", "Real-time application tracking"],
-    cta: "Start Applying Automatically",
-    href: "https://jobcopilot.com/?linkId=lp_494205&sourceId=constantin-florentin-cristian&tenantId=jobcopilot",
-    badge: "AI Job Search",
-    color: "#4f8bff",
-  },
-];
-
+const CATEGORIES = [
+  { label: 'AI Writing Tools',      slug: 'ai-writing-tools',      emoji: '✍️',  desc: 'Content & copywriting AI' },
+  { label: 'AI Image Generators',   slug: 'ai-image-generators',   emoji: '🎨',  desc: 'Text-to-image AI tools' },
+  { label: 'AI Code Assistants',    slug: 'ai-code-assistants',    emoji: '💻',  desc: 'Coding & dev assistants' },
+  { label: 'AI Video Tools',        slug: 'ai-video-tools',        emoji: '🎬',  desc: 'Video creation & editing' },
+  { label: 'AI SEO Tools',          slug: 'ai-seo-tools',          emoji: '📈',  desc: 'SEO & marketing AI' },
+  { label: 'AI Chatbots',           slug: 'ai-chatbots',           emoji: '🤖',  desc: 'Conversational AI' },
+  { label: 'AI Audio Tools',        slug: 'ai-audio-tools',        emoji: '🎵',  desc: 'Music & voice generation' },
+  { label: 'AI Productivity',       slug: 'ai-productivity',       emoji: '⚡',  desc: 'Workflow & task AI' },
+]
 
 function getCover(keyword?: string, slug?: string): { gradient: string; emoji: string } {
   const k = ((keyword || '') + ' ' + (slug || '')).toLowerCase()
   if (k.includes('photo') || k.includes('image') || k.includes('art'))   return { gradient: 'linear-gradient(135deg,#7c3aed,#db2777)', emoji: '🎨' }
-  if (k.includes('video'))                                                  return { gradient: 'linear-gradient(135deg,#dc2626,#ea580c)', emoji: '🎬' }
-  if (k.includes('music') || k.includes('audio') || k.includes('song'))   return { gradient: 'linear-gradient(135deg,#7c3aed,#4f46e5)', emoji: '🎵' }
-  if (k.includes('code') || k.includes('coding') || k.includes('developer')) return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '💻' }
-  if (k.includes('seo') || k.includes('marketing'))                        return { gradient: 'linear-gradient(135deg,#16a34a,#0891b2)', emoji: '📈' }
-  if (k.includes('resume') || k.includes('cover letter') || k.includes('job')) return { gradient: 'linear-gradient(135deg,#1d4ed8,#4338ca)', emoji: '💼' }
-  if (k.includes('design') || k.includes('logo'))                          return { gradient: 'linear-gradient(135deg,#db2777,#9333ea)', emoji: '✏️' }
-  if (k.includes('email'))                                                  return { gradient: 'linear-gradient(135deg,#0891b2,#1d4ed8)', emoji: '📧' }
-  if (k.includes('meeting') || k.includes('productivity'))                 return { gradient: 'linear-gradient(135deg,#0d9488,#16a34a)', emoji: '⚡' }
-  if (k.includes('education') || k.includes('essay') || k.includes('learn')) return { gradient: 'linear-gradient(135deg,#d97706,#dc2626)', emoji: '🎓' }
-  if (k.includes('social media'))                                           return { gradient: 'linear-gradient(135deg,#e11d48,#7c3aed)', emoji: '📱' }
-  if (k.includes('customer service'))                                       return { gradient: 'linear-gradient(135deg,#0891b2,#16a34a)', emoji: '💬' }
-  if (k.includes('translation'))                                            return { gradient: 'linear-gradient(135deg,#0d9488,#4338ca)', emoji: '🌍' }
-  if (k.includes('presentation'))                                           return { gradient: 'linear-gradient(135deg,#ea580c,#dc2626)', emoji: '🗂️' }
-  if (k.includes('summarizer') || k.includes('summariz'))                  return { gradient: 'linear-gradient(135deg,#4338ca,#7c3aed)', emoji: '📋' }
-  if (k.includes('detector') || k.includes('plagiarism'))                  return { gradient: 'linear-gradient(135deg,#dc2626,#b91c1c)', emoji: '🔍' }
-  if (k.includes('humanizer'))                                              return { gradient: 'linear-gradient(135deg,#0891b2,#7c3aed)', emoji: '🧑‍💼' }
-  if (k.includes('paraphraser') || k.includes('story') || k.includes('writer') || k.includes('writing')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '✍️' }
-  if (k.includes('avatar') || k.includes('face'))                          return { gradient: 'linear-gradient(135deg,#db2777,#ea580c)', emoji: '👤' }
-  if (k.includes('interior') || k.includes('design'))                      return { gradient: 'linear-gradient(135deg,#d97706,#16a34a)', emoji: '🏠' }
-  if (k.includes('website') || k.includes('builder'))                      return { gradient: 'linear-gradient(135deg,#0891b2,#4f8bff)', emoji: '🌐' }
-  if (k.includes('chatgpt') || k.includes('claude') || k.includes('gemini') || k.includes('chatbot')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
-  if (k.includes('analytics') || k.includes('data'))                       return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '📊' }
+  if (k.includes('video'))                                                 return { gradient: 'linear-gradient(135deg,#dc2626,#ea580c)', emoji: '🎬' }
+  if (k.includes('music') || k.includes('audio') || k.includes('song'))  return { gradient: 'linear-gradient(135deg,#7c3aed,#4f46e5)', emoji: '🎵' }
+  if (k.includes('code') || k.includes('coding') || k.includes('dev'))   return { gradient: 'linear-gradient(135deg,#0891b2,#0d9488)', emoji: '💻' }
+  if (k.includes('seo') || k.includes('marketing'))                       return { gradient: 'linear-gradient(135deg,#16a34a,#0891b2)', emoji: '📈' }
+  if (k.includes('resume') || k.includes('job'))                          return { gradient: 'linear-gradient(135deg,#1d4ed8,#4338ca)', emoji: '💼' }
+  if (k.includes('design') || k.includes('logo'))                         return { gradient: 'linear-gradient(135deg,#db2777,#9333ea)', emoji: '✏️' }
+  if (k.includes('email'))                                                 return { gradient: 'linear-gradient(135deg,#0891b2,#1d4ed8)', emoji: '📧' }
+  if (k.includes('productivity') || k.includes('meeting'))                return { gradient: 'linear-gradient(135deg,#0d9488,#16a34a)', emoji: '⚡' }
+  if (k.includes('education') || k.includes('learn'))                     return { gradient: 'linear-gradient(135deg,#d97706,#dc2626)', emoji: '🎓' }
+  if (k.includes('chatgpt') || k.includes('claude') || k.includes('chatbot')) return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
   return { gradient: 'linear-gradient(135deg,#4f8bff,#7c5cfc)', emoji: '🤖' }
 }
 
-
-function isNew(dateStr?: string): boolean {
-  if (!dateStr) return false;
-  const diff = Date.now() - new Date(dateStr).getTime();
-  return diff < 1000 * 60 * 60 * 24 * 30; // 30 days
+function isNew(d?: string) {
+  return d ? Date.now() - new Date(d).getTime() < 1000 * 60 * 60 * 24 * 30 : false
 }
 
 export default function HomePage() {
-  const posts = getAllPosts();
-  const featured = posts[0] ?? null;
-  const recent = posts.slice(1, 7);
+  const posts = getAllPosts()
+  const featured = posts[0] ?? null
+  const recent = posts.slice(1, 10)
 
   return (
     <>
-      <style>{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-          --bg: #080b14; --surface: #0f1420; --surface2: #141926;
-          --border: #1e2535; --border2: #252d40;
-          --text: #e4e8f4; --muted: #7a82a0;
-          --accent: #4f8bff; --accent2: #7c5cfc;
-          --radius: 12px; --radius-sm: 8px;
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; }
-        a { text-decoration: none; color: inherit; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+      {/* ── Full-screen 3D animated background ── */}
+      <HeroScene3D />
 
-        /* Hero */
-        .hero { position: relative; overflow: hidden; padding: 100px 24px 90px; text-align: center; }
-        .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79,139,255,0.18) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,92,252,0.12) 0%, transparent 60%); pointer-events: none; }
-        .hero-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 32px 32px; pointer-events: none; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--accent); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 28px; }
-        .hero-badge::before { content: '●'; color: #2ecc71; font-size: 0.55rem; }
-        .hero h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 900; line-height: 1.12; letter-spacing: -0.035em; margin-bottom: 22px; background: linear-gradient(135deg, #ffffff 25%, var(--accent) 65%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero p { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--muted); max-width: 640px; margin: 0 auto 40px; line-height: 1.8; }
-        .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-        .hero-cta-primary { display: inline-flex; align-items: center; gap: 8px; padding: 15px 34px; border-radius: 50px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-weight: 700; font-size: 1rem; transition: opacity 0.2s, transform 0.2s; box-shadow: 0 0 40px rgba(79,139,255,0.25); }
-        .hero-cta-primary:hover { opacity: 0.9; transform: translateY(-2px); }
-        .hero-cta-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 15px 34px; border-radius: 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: var(--text); font-weight: 600; font-size: 1rem; transition: background 0.2s; }
-        .hero-cta-secondary:hover { background: rgba(255,255,255,0.1); }
+      <div style={{ position: 'relative', zIndex: 1, minHeight: '100vh', color: '#e4e8f4', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
 
-        /* Stats */
-        .stats-bar { display: flex; flex-wrap: wrap; margin-top: 64px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); max-width: 800px; margin-left: auto; margin-right: auto; }
-        .stat-item { flex: 1; min-width: 130px; padding: 24px 16px; text-align: center; border-right: 1px solid var(--border); position: relative; }
-        .stat-item:last-child { border-right: none; }
-        .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--accent); display: block; letter-spacing: -0.03em; }
-        .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; display: block; }
+        {/* ── HERO ──────────────────────────────────────── */}
+        <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '120px 24px 80px', position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 75% 55% at 50% 50%, rgba(5,8,20,0.55) 0%, rgba(5,8,20,0.88) 100%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'relative', zIndex: 2, maxWidth: 820, margin: '0 auto' }}>
 
-        /* Section */
-        .section { padding: 70px 0; }
-        .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 36px; }
-        .section-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.025em; }
-        .section-link { font-size: 0.85rem; color: var(--accent); }
-        .section-link:hover { text-decoration: underline; }
-        .section-eyebrow { font-size: 0.72rem; color: var(--accent); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
-
-        /* Trending */
-        .trending-row { display: flex; flex-wrap: wrap; gap: 10px; }
-        .trending-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 50px; background: var(--surface); border: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
-        .trending-pill:hover { border-color: var(--accent); color: var(--accent); }
-        .trending-pill-hot { border-color: rgba(239,68,68,0.3); color: #f87171; background: rgba(239,68,68,0.06); }
-
-        /* Top 3 picks */
-        .picks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .pick-card { padding: 28px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); position: relative; transition: border-color 0.15s, transform 0.15s; }
-        .pick-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-        .pick-card--featured { border-color: var(--accent); background: linear-gradient(145deg, var(--surface), rgba(79,139,255,0.05)); }
-        .pick-badge { position: absolute; top: -12px; left: 24px; padding: 4px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
-        .pick-badge--gold { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
-        .pick-badge--silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
-        .pick-badge--bronze { background: linear-gradient(135deg, #b45309, #92400e); color: #fff; }
-        .pick-icon { font-size: 2.4rem; margin-bottom: 16px; display: block; }
-        .pick-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
-        .pick-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
-        .pick-rating { color: #f59e0b; font-size: 0.9rem; margin-bottom: 4px; letter-spacing: 2px; }
-        .pick-rating-text { font-size: 0.75rem; color: var(--muted); }
-        .pick-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 0.83rem; color: var(--accent); font-weight: 600; }
-        .pick-link:hover { text-decoration: underline; }
-
-        /* Category grid */
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
-        .category-card { padding: 26px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; display: block; }
-        .category-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
-        .category-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
-        .category-label { font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; color: var(--text); }
-        .category-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
-
-        /* How it works */
-        .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
-        .how-grid::before { content: ''; position: absolute; top: 36px; left: calc(33.33% - 20px); right: calc(33.33% - 20px); height: 1px; background: linear-gradient(90deg, var(--accent), var(--accent2)); opacity: 0.3; }
-        .how-card { padding: 32px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; }
-        .how-num { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-weight: 900; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
-        .how-title { font-weight: 700; font-size: 1rem; margin-bottom: 10px; }
-        .how-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
-
-        /* Featured */
-        .featured-card { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.15s; }
-        .featured-card:hover { border-color: var(--accent); }
-        .featured-visual { display: flex; align-items: center; justify-content: center; min-height: 300px; font-size: 6rem; background: linear-gradient(135deg, rgba(79,139,255,0.1), rgba(124,92,252,0.08)); position: relative; overflow: hidden; }
-        .featured-visual::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,255,255,0.04), transparent 70%); }
-        .featured-content { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; }
-        .featured-badge { display: inline-block; padding: 5px 14px; border-radius: 20px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; width: fit-content; }
-        .featured-content h2 { font-size: 1.65rem; font-weight: 900; line-height: 1.25; margin-bottom: 14px; letter-spacing: -0.025em; }
-        .featured-content p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; margin-bottom: 22px; }
-        .featured-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 22px; display: flex; gap: 14px; }
-        .read-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; font-size: 0.9rem; transition: opacity 0.15s; width: fit-content; }
-        .read-btn:hover { opacity: 0.85; }
-
-        /* Why trust us */
-        .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-        .why-card { padding: 28px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; }
-        .why-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
-        .why-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
-        .why-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
-
-        /* Post grid */
-        .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 20px; }
-        .post-card { padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color 0.15s, transform 0.15s; display: flex; flex-direction: column; }
-        .post-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .post-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .post-tag { display: inline-block; padding: 3px 10px; border-radius: 20px; background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.2); color: var(--accent2); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
-        .post-read-time { font-size: 0.72rem; color: var(--muted); }
-        .post-card h3 { font-size: 1.02rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
-        .post-card h3 a:hover { color: var(--accent); }
-        .post-card p { color: var(--muted); font-size: 0.87rem; line-height: 1.65; flex: 1; margin-bottom: 18px; }
-        .post-cover-img{width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:16px;display:block;flex-shrink:0}
-        .post-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid var(--border); }
-        .post-date { font-size: 0.72rem; color: var(--muted); }
-        .post-link { font-size: 0.82rem; color: var(--accent); font-weight: 600; }
-        .post-new-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; margin-left: 8px; vertical-align: middle; }
-
-        .post-cover { height: 130px; border-radius: 8px; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
-        .post-cover-emoji { font-size: 3rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); position: relative; z-index: 1; }
-        .post-cover-shine { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%); }
-        .post-cover-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 20px 20px; }
-
-
-        /* ── AFFILIATE / RECOMMENDED TOOLS ── */
-        .affiliate-section { padding: 70px 0; }
-        .affiliate-grid { display: flex; flex-direction: column; gap: 24px; }
-        .affiliate-card {
-          display: grid;
-          grid-template-columns: auto 1fr auto;
-          align-items: center;
-          gap: 28px;
-          padding: 32px 36px;
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-radius: var(--radius);
-          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-          position: relative;
-          overflow: hidden;
-        }
-        .affiliate-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(79,139,255,0.04), transparent 60%);
-          pointer-events: none;
-        }
-        .affiliate-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-        .affiliate-icon-wrap {
-          width: 72px; height: 72px;
-          border-radius: 16px;
-          background: linear-gradient(135deg, rgba(79,139,255,0.15), rgba(124,92,252,0.1));
-          border: 1px solid rgba(79,139,255,0.2);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 2.2rem;
-          flex-shrink: 0;
-        }
-        .affiliate-body { min-width: 0; }
-        .affiliate-tool-badge {
-          display: inline-block;
-          padding: 3px 10px;
-          border-radius: 20px;
-          background: rgba(79,139,255,0.12);
-          border: 1px solid rgba(79,139,255,0.2);
-          color: var(--accent);
-          font-size: 0.68rem;
-          font-weight: 700;
-          letter-spacing: 0.07em;
-          text-transform: uppercase;
-          margin-bottom: 8px;
-        }
-        .affiliate-name { font-size: 1.25rem; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
-        .affiliate-tagline { font-size: 0.88rem; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
-        .affiliate-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
-        .affiliate-features { display: flex; flex-wrap: wrap; gap: 8px; }
-        .affiliate-feature {
-          display: inline-flex; align-items: center; gap: 5px;
-          padding: 4px 12px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid var(--border);
-          border-radius: 20px;
-          font-size: 0.75rem;
-          color: var(--muted);
-        }
-        .affiliate-feature::before { content: '✓'; color: #22c55e; font-weight: 700; font-size: 0.7rem; }
-        .affiliate-cta-wrap { flex-shrink: 0; text-align: center; }
-        .affiliate-btn {
-          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-          padding: 14px 28px;
-          border-radius: 50px;
-          background: linear-gradient(135deg, var(--accent), var(--accent2));
-          color: #fff;
-          font-weight: 700;
-          font-size: 0.9rem;
-          white-space: nowrap;
-          transition: opacity 0.2s, transform 0.2s;
-          box-shadow: 0 4px 20px rgba(79,139,255,0.3);
-        }
-        .affiliate-btn:hover { opacity: 0.88; transform: translateY(-2px); }
-        .affiliate-disclaimer { font-size: 0.68rem; color: var(--muted); margin-top: 8px; opacity: 0.7; }
-
-        /* FAQ */
-        .faq-list { display: flex; flex-direction: column; gap: 12px; }
-        .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-        .faq-q { padding: 20px 24px; font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .faq-q::after { content: '+'; font-size: 1.4rem; color: var(--accent); font-weight: 300; flex-shrink: 0; margin-left: 16px; }
-        .faq-a { padding: 0 24px 20px; font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
-
-        /* Newsletter */
-        .newsletter-section { padding: 60px 40px; background: linear-gradient(135deg, var(--surface), rgba(79,139,255,0.06)); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; margin: 0 0 20px; }
-        .newsletter-section h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.02em; }
-        .newsletter-section p { color: var(--muted); margin-bottom: 28px; font-size: 1rem; }
-        .newsletter-form { display: flex; gap: 12px; max-width: 460px; margin: 0 auto; }
-        .newsletter-input { flex: 1; padding: 13px 18px; border-radius: 50px; background: var(--bg); border: 1px solid var(--border2); color: var(--text); font-size: 0.92rem; }
-        .newsletter-input:focus { outline: none; border-color: var(--accent); }
-        .newsletter-btn { padding: 13px 28px; border-radius: 50px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-weight: 700; font-size: 0.9rem; border: none; cursor: pointer; white-space: nowrap; }
-
-        /* CTA */
-        .cta-section { margin: 20px 0 70px; padding: 70px 40px; background: linear-gradient(135deg, var(--surface), rgba(79,139,255,0.06)); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; }
-        .cta-section h2 { font-size: 2rem; font-weight: 900; margin-bottom: 14px; letter-spacing: -0.025em; }
-        .cta-section p { color: var(--muted); margin-bottom: 32px; font-size: 1.05rem; max-width: 520px; margin-left: auto; margin-right: auto; }
-        .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 16px 36px; border-radius: 50px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; font-weight: 700; font-size: 1rem; transition: opacity 0.2s, transform 0.2s; box-shadow: 0 0 40px rgba(79,139,255,0.2); }
-        .cta-btn:hover { opacity: 0.88; transform: translateY(-2px); }
-
-        .empty-state { text-align: center; padding: 80px 0; color: var(--muted); }
-
-        @media (max-width: 900px) {
-          .picks-grid { grid-template-columns: 1fr; }
-          .why-grid { grid-template-columns: repeat(2, 1fr); }
-          .how-grid { grid-template-columns: 1fr; }
-          .how-grid::before { display: none; }
-          .featured-card { grid-template-columns: 1fr; }
-          .featured-visual { min-height: 160px; font-size: 4rem; }
-          .featured-content { padding: 28px 24px; }
-          .affiliate-card { grid-template-columns: 1fr; text-align: center; }
-          .affiliate-icon-wrap { margin: 0 auto; }
-          .affiliate-features { justify-content: center; }
-        }
-        @media (max-width: 600px) {
-          .hero { padding: 60px 20px 50px; }
-          .cta-section, .newsletter-section { padding: 40px 20px; }
-          .newsletter-form { flex-direction: column; }
-          .why-grid { grid-template-columns: 1fr 1fr; }
-          .stat-item { min-width: 100px; padding: 18px 10px; }
-          .affiliate-card { padding: 24px 20px; }
-        }
-      `}</style>
-
-      {/* ── HERO ── */}
-      <section className="hero">
-        <div className="hero-bg" />
-        <div className="hero-dots" />
-        <div className="hero-badge">Independent AI Reviews</div>
-        <h1 dangerouslySetInnerHTML={{ __html: "Find the Best AI Tools<br />for Your Work" }} />
-        <p>Expert-tested reviews and honest comparisons of 200+ AI tools. Cut through the hype and find what actually works for your workflow.</p>
-        <div className="hero-ctas">
-          <a href="/best-ai-tools" className="hero-cta-primary">Browse All Reviews →</a>
-          <a href="/categories" className="hero-cta-secondary">Browse Categories →</a>
-        </div>
-        <div className="stats-bar">
-          {([{"v":"200+","l":"Tools Reviewed"},{"v":"50K+","l":"Monthly Readers"},{"v":"100%","l":"Independent"},{"v":"2025","l":"Up-to-date"}] as {v:string,l:string}[]).map((st) => (
-            <div className="stat-item" key={st.l}>
-              <span className="stat-value">{st.v}</span>
-              <span className="stat-label">{st.l}</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 20px', borderRadius: 20, background: 'rgba(79,139,255,0.12)', border: '1px solid rgba(79,139,255,0.3)', color: '#4f8bff', fontSize: '0.78rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 36 }}>
+              <span style={{ color: '#22c55e', fontSize: '0.6rem' }}>●</span> 200+ Independent AI Tool Reviews
             </div>
-          ))}
-        </div>
-      </section>
 
-      <div className="container">
+            <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 4.8rem)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.04em', marginBottom: 28, background: 'linear-gradient(135deg, #ffffff 20%, #4f8bff 55%, #7c5cfc 90%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              The Best AI Tools,<br />Reviewed & Ranked
+            </h1>
 
-        {/* ── TRENDING ── */}
-        <section className="section" style={{ paddingBottom: 40 }}>
-          <div className="section-eyebrow">Trending Now</div>
-          <div className="trending-row">
-            {([{"label":"ChatGPT vs Claude","hot":true,"href":"/chatgpt-vs-claude-vs-gemini"},{"label":"Best AI Writers","hot":true,"href":"/best-ai-writing-tools-2025"},{"label":"AI Image Generators","href":"/best-ai-image-generators-2025"},{"label":"Coding Assistants","href":"/best-ai-coding-assistants-2025"},{"label":"AI for SEO","href":"/best-ai-seo-tools-2025"},{"label":"Free AI Tools","href":"/best-free-ai-tools-2025"},{"label":"GPT-4o Review","hot":true,"href":"/chatgpt-review-2025"}] as {label:string,hot?:boolean,href:string}[]).map((t) => (
-              <a key={t.label} href={t.href} className={"trending-pill" + (t.hot ? " trending-pill-hot" : "")}>
-                {t.hot && "🔥 "}{t.label}
+            <p style={{ fontSize: 'clamp(1.05rem, 2vw, 1.25rem)', color: '#8a95b5', maxWidth: 580, margin: '0 auto 44px', lineHeight: 1.8 }}>
+              Honest, in-depth AI tool reviews for writing, coding, images, video, and beyond — so you pick the right tool, every time.
+            </p>
+
+            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 64 }}>
+              <a href="/all-articles" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 38px', borderRadius: 50, background: 'linear-gradient(135deg, #4f8bff, #7c5cfc)', color: '#fff', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', boxShadow: '0 0 60px rgba(79,139,255,0.35)' }}>
+                Browse All Reviews →
               </a>
-            ))}
-          </div>
-        </section>
-
-        {/* ── TOP 3 PICKS ── */}
-        <section className="section" style={{ paddingTop: 20 }}>
-          <div className="section-eyebrow">Expert Picks</div>
-          <div className="section-header">
-            <h2 className="section-title">Top AI Tools Right Now</h2>
-          </div>
-          <div className="picks-grid">
-            {([{"badge":"Best Overall","badgeType":"gold","icon":"🤖","title":"ChatGPT (GPT-4o)","desc":"The most capable all-around AI assistant for writing, analysis and coding tasks.","rating":5,"href":"/chatgpt-review-2025"},{"badge":"Best for Writing","badgeType":"silver","icon":"✍️","title":"Claude 3.5 Sonnet","desc":"Exceptional at long-form content, nuanced writing and following complex instructions.","rating":5,"href":"/claude-review-2025"},{"badge":"Best Value","badgeType":"bronze","icon":"💡","title":"Gemini Advanced","desc":"Google's flagship AI with deep integration across productivity tools and search.","rating":4,"href":"/gemini-review-2025"}] as {badge:string,badgeType:string,icon:string,title:string,desc:string,rating:number,href:string}[]).map((p, i) => (
-              <div key={p.title} className={"pick-card" + (i === 0 ? " pick-card--featured" : "")}>
-                <span className={"pick-badge pick-badge--" + p.badgeType}>{p.badge}</span>
-                <span className="pick-icon">{p.icon}</span>
-                <div className="pick-title">{p.title}</div>
-                <div className="pick-desc">{p.desc}</div>
-                <div className="pick-rating">{STARS(p.rating)}</div>
-                <div className="pick-rating-text">{p.rating}.0 / 5.0 — Expert Score</div>
-                <a href={p.href} className="pick-link">Read Full Review →</a>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── HOW IT WORKS ── */}
-        <section className="section">
-          <div className="section-eyebrow">Our Process</div>
-          <div className="section-header">
-            <h2 className="section-title">How We Review AI Tools</h2>
-          </div>
-          <div className="how-grid">
-            {([{"num":"01","title":"We Test Extensively","desc":"Every AI tool is tested across dozens of real-world tasks and use cases by our expert team."},{"num":"02","title":"We Score Objectively","desc":"Tools are rated on accuracy, speed, price, features and ease of use using our proprietary framework."},{"num":"03","title":"You Decide with Confidence","desc":"Our detailed breakdowns give you everything you need to pick the right tool for your needs."}] as {num:string,title:string,desc:string}[]).map((h) => (
-              <div key={h.num} className="how-card">
-                <div className="how-num">{h.num}</div>
-                <div className="how-title">{h.title}</div>
-                <div className="how-desc">{h.desc}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── CATEGORIES ── */}
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="section-header">
-            <h2 className="section-title">Browse by Category</h2>
-            <a href="/categories" className="section-link">View all →</a>
-          </div>
-          <div className="category-grid">
-            {([{"icon":"✍️","label":"AI Writing","desc":"Content generation & copywriting","href":"/category/ai-writing"},{"icon":"🎨","label":"AI Image","desc":"Image generation & editing","href":"/category/ai-image"},{"icon":"💻","label":"AI Coding","desc":"Code assistants & dev tools","href":"/category/ai-coding"},{"icon":"🤖","label":"Chatbots","desc":"Conversational AI & assistants","href":"/category/chatbots"},{"icon":"📊","label":"Analytics","desc":"AI-powered data intelligence","href":"/category/analytics"},{"icon":"🎵","label":"Audio & Video","desc":"AI for speech, music & video","href":"/category/audio-video"},{"icon":"🖼️","label":"AI Photo Editing","desc":"Enhance & edit photos with AI","href":"/category/ai-photo-editing"},{"icon":"🧑‍💼","label":"AI Humanizer","desc":"Make AI text sound human","href":"/category/ai-humanizer"},{"icon":"📝","label":"AI Paraphraser","desc":"Rewrite & rephrase with AI","href":"/category/ai-paraphraser"},{"icon":"🎶","label":"AI Music","desc":"Generate music & songs with AI","href":"/category/ai-music"},{"icon":"🎭","label":"AI Face Swap","desc":"Face swap & avatar tools","href":"/category/ai-face-swap"},{"icon":"🎓","label":"AI Essay Writer","desc":"AI tools for academic writing","href":"/category/ai-essay-writer"},{"icon":"🎬","label":"AI Video Editor","desc":"Edit & create videos with AI","href":"/category/ai-video-editing"},{"icon":"🌐","label":"AI Website Builder","desc":"Build websites with AI","href":"/category/ai-website-builder"},{"icon":"🔍","label":"AI Plagiarism Checker","desc":"Detect copied content with AI","href":"/category/ai-plagiarism-checker"},{"icon":"📖","label":"AI Story Generator","desc":"Create stories & fiction with AI","href":"/category/ai-story-generator"},{"icon":"👤","label":"AI Avatar Generator","desc":"Create AI avatars & profiles","href":"/category/ai-avatar-generator"},{"icon":"🏠","label":"AI Interior Design","desc":"Design spaces with AI","href":"/category/ai-interior-design"},{"icon":"💼","label":"AI Cover Letter","desc":"Write cover letters with AI","href":"/category/ai-cover-letter"},{"icon":"🎯","label":"AI Logo Generator","desc":"Create logos & branding with AI","href":"/category/ai-logo-generator"},{"icon":"🕵️","label":"AI Detector","desc":"Detect AI-generated content","href":"/category/ai-detector"},{"icon":"📋","label":"AI Summarizer","desc":"Summarize documents & articles","href":"/category/ai-summarizer"},{"icon":"🎥","label":"AI Video Generator","desc":"Generate videos from text","href":"/category/ai-video-generator"},{"icon":"📄","label":"AI Resume Builder","desc":"Build resumes with AI","href":"/category/ai-resume-builder"},{"icon":"📊","label":"AI Presentation","desc":"Create slides & decks with AI","href":"/category/ai-presentation"},{"icon":"🌍","label":"AI Translation","desc":"Translate languages with AI","href":"/category/ai-translation"},{"icon":"💬","label":"AI Customer Service","desc":"Automate support with AI","href":"/category/ai-customer-service"},{"icon":"🎨","label":"AI Design Tools","desc":"Graphic design powered by AI","href":"/category/ai-design-tools"},{"icon":"🔎","label":"AI SEO Tools","desc":"Rank higher with AI SEO","href":"/category/ai-seo-tools"},{"icon":"📧","label":"AI Email Writer","desc":"Write better emails with AI","href":"/category/ai-email"},{"icon":"🗓️","label":"AI Meeting Tools","desc":"Automate meeting notes with AI","href":"/category/ai-meeting-tools"},{"icon":"⚡","label":"AI Productivity","desc":"Work smarter with AI tools","href":"/category/ai-productivity"},{"icon":"🏫","label":"AI Education","desc":"Learn & teach with AI","href":"/category/ai-education"},{"icon":"📣","label":"AI Marketing","desc":"Scale marketing with AI","href":"/category/ai-marketing"},{"icon":"📱","label":"AI Social Media","desc":"Grow your audience with AI","href":"/category/ai-social-media"}] as {icon:string,label:string,desc:string,href:string}[]).map((c) => (
-              <a href={c.href} className="category-card" key={c.label}>
-                <span className="category-icon">{c.icon}</span>
-                <div className="category-label">{c.label}</div>
-                <div className="category-desc">{c.desc}</div>
+              <a href="/categories" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '16px 38px', borderRadius: 50, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#e4e8f4', fontWeight: 600, fontSize: '1rem', textDecoration: 'none' }}>
+                Explore Categories
               </a>
-            ))}
-          </div>
-        </section>
-
-        {/* ── FEATURED ── */}
-        {featured && (
-          <section className="section" style={{ paddingTop: 0 }}>
-            <div className="section-header">
-              <h2 className="section-title">Featured Article</h2>
             </div>
-            <a href={`/${featured.slug}`} className="featured-card">
-              <div className="featured-visual">🤖</div>
-              <div className="featured-content">
-                <span className="featured-badge">⭐ Editor's Pick</span>
-                <h2>{featured.title}</h2>
-                <p>{featured.description || "Read our comprehensive in-depth review and expert verdict."}</p>
-                <div className="featured-meta">
-                  {featured.date && <span>📅 {featured.date}</span>}
-                  <span>⏱ 8 min read</span>
+
+            {/* Stats bar */}
+            <div style={{ display: 'flex', background: 'rgba(10,14,28,0.75)', backdropFilter: 'blur(24px)', border: '1px solid rgba(79,139,255,0.2)', borderRadius: 18, overflow: 'hidden', maxWidth: 600, margin: '0 auto' }}>
+              {[['200+', 'AI Tools Reviewed'], ['50K+', 'Monthly Readers'], ['100%', 'Independent'], ['4.8★', 'Avg Rating']].map(([v, l], i) => (
+                <div key={i} style={{ flex: 1, padding: '24px 10px', textAlign: 'center', borderRight: i < 3 ? '1px solid rgba(79,139,255,0.15)' : 'none' }}>
+                  <span style={{ display: 'block', fontSize: '1.7rem', fontWeight: 900, color: '#4f8bff', letterSpacing: '-0.02em' }}>{v}</span>
+                  <span style={{ display: 'block', fontSize: '0.65rem', color: '#6a729a', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 4 }}>{l}</span>
                 </div>
-                <span className="read-btn">Read Full Article →</span>
-              </div>
-            </a>
-          </section>
-        )}
-
-        {/* ── LATEST ARTICLES ── */}
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="section-header">
-            <h2 className="section-title">Latest Articles</h2>
-            <a href="/all-articles" className="section-link">View all →</a>
-          </div>
-          {posts.length === 0 ? (
-            <p className="empty-state">No articles yet — check back soon!</p>
-          ) : (
-            <div className="post-grid">
-              {(featured ? recent : posts.slice(0, 6)).map((post) => (
-                <article className="post-card" key={post.slug}>
-                  {post.coverImage
-                    ? <img src={post.coverImage} alt={post.title} className="post-cover-img" />
-                    : (() => { const cv = getCover(post.keyword, post.slug); return (
-                    <div className="post-cover" style={{ background: cv.gradient }}>
-                      <div className="post-cover-dots" />
-                      <div className="post-cover-shine" />
-                      <span className="post-cover-emoji">{cv.emoji}</span>
-                    </div>
-                  )})()}
-                  <div className="post-card-top">
-                    {post.keyword && <span className="post-tag">{post.keyword}</span>}
-                  {isNew(post.date) && <span className="post-new-badge">New</span>}
-                    <span className="post-read-time">⏱ 6 min</span>
-                  </div>
-                  <h3><a href={`/${post.slug}`}>{post.title}</a></h3>
-                  <p>{post.description || "Read our expert analysis and verdict."}</p>
-                  <div className="post-card-footer">
-                    <span className="post-date">{post.date}</span>
-                    <a href={`/${post.slug}`} className="post-link">Read →</a>
-                  </div>
-                </article>
               ))}
             </div>
-          )}
+          </div>
         </section>
 
-        {/* ── RECOMMENDED TOOLS (AFFILIATE) ── */}
-        <section id="recommended-tools" className="affiliate-section">
-          <div className="section-eyebrow">Recommended Tools</div>
-          <div className="section-header">
-            <h2 className="section-title">Tools We Actually Use & Recommend</h2>
+        {/* ── CATEGORIES ─────────────────────────────────── */}
+        <section style={{ padding: '80px 24px', maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <p style={{ fontSize: '0.72rem', color: '#4f8bff', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>EXPLORE BY CATEGORY</p>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, letterSpacing: '-0.03em' }}>Every Type of AI Tool, Covered</h2>
           </div>
-          <div className="affiliate-grid">
-            {AFFILIATE_TOOLS.map((tool) => (
-              <div key={tool.name} className="affiliate-card">
-                <div className="affiliate-icon-wrap">{tool.icon}</div>
-                <div className="affiliate-body">
-                  <span className="affiliate-tool-badge">{tool.badge}</span>
-                  <div className="affiliate-name">{tool.name}</div>
-                  <div className="affiliate-tagline">{tool.tagline}</div>
-                  <div className="affiliate-desc">{tool.description}</div>
-                  <div className="affiliate-features">
-                    {tool.features.map((f) => (
-                      <span key={f} className="affiliate-feature">{f}</span>
-                    ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
+            {CATEGORIES.map(cat => (
+              <a key={cat.slug} href={`/category/${cat.slug}`} style={{ padding: '28px 22px', background: 'rgba(10,15,28,0.72)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, textDecoration: 'none', color: 'inherit', display: 'block' }}>
+                <span style={{ fontSize: '2rem', display: 'block', marginBottom: 12 }}>{cat.emoji}</span>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: 6, color: '#e4e8f4' }}>{cat.label}</div>
+                <div style={{ fontSize: '0.78rem', color: '#6a729a', lineHeight: 1.5 }}>{cat.desc}</div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* ── FEATURED ARTICLE ───────────────────────────── */}
+        {featured && (() => {
+          const { gradient, emoji } = getCover((featured as any).keyword, featured.slug)
+          return (
+            <section style={{ padding: '0 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
+              <p style={{ fontSize: '0.72rem', color: '#4f8bff', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20 }}>⭐ FEATURED REVIEW</p>
+              <a href={`/${featured.slug}`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: 'rgba(10,15,28,0.78)', backdropFilter: 'blur(24px)', border: '1px solid rgba(79,139,255,0.22)', borderRadius: 20, overflow: 'hidden', textDecoration: 'none', color: 'inherit' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300, fontSize: '5rem', background: gradient }}>
+                  {emoji}
+                </div>
+                <div style={{ padding: '44px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <span style={{ display: 'inline-block', padding: '5px 14px', borderRadius: 20, background: 'linear-gradient(135deg, #4f8bff, #7c5cfc)', color: '#fff', fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 18, width: 'fit-content' }}>
+                    {(featured as any).category || 'AI Review'}
+                  </span>
+                  <h2 style={{ fontSize: '1.65rem', fontWeight: 900, lineHeight: 1.25, marginBottom: 14, letterSpacing: '-0.025em', color: '#e4e8f4' }}>{featured.title}</h2>
+                  <p style={{ color: '#6a729a', fontSize: '0.92rem', lineHeight: 1.8, marginBottom: 24 }}>
+                    {((featured as any).description || (featured as any).excerpt || '').slice(0, 160)}...
+                  </p>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 26px', borderRadius: 10, background: '#4f8bff', color: '#fff', fontWeight: 700, fontSize: '0.9rem', width: 'fit-content' }}>
+                    Read Full Review →
+                  </span>
+                </div>
+              </a>
+            </section>
+          )
+        })()}
+
+        {/* ── RECENT ARTICLES ────────────────────────────── */}
+        <section style={{ padding: '0 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 900, letterSpacing: '-0.025em' }}>Latest AI Reviews</h2>
+            <a href="/all-articles" style={{ fontSize: '0.85rem', color: '#4f8bff', textDecoration: 'none' }}>View all →</a>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
+            {recent.map((post: any) => {
+              const { gradient, emoji } = getCover(post.keyword, post.slug)
+              return (
+                <a key={post.slug} href={`/${post.slug}`} style={{ display: 'flex', flexDirection: 'column', padding: 24, background: 'rgba(10,15,28,0.72)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ height: 120, borderRadius: 10, marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.8rem', background: gradient, flexShrink: 0 }}>
+                    {emoji}
                   </div>
-                </div>
-                <div className="affiliate-cta-wrap">
-                  <a href={tool.href} className="affiliate-btn" target="_blank" rel="noopener noreferrer">
-                    {tool.cta} →
-                  </a>
-                  <div className="affiliate-disclaimer">* Affiliate link</div>
-                </div>
-              </div>
-            ))}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <span style={{ padding: '3px 10px', borderRadius: 20, background: 'rgba(124,92,252,0.12)', border: '1px solid rgba(124,92,252,0.2)', color: '#7c5cfc', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      {post.category || 'AI Review'}
+                    </span>
+                    {isNew(post.date) && (
+                      <span style={{ padding: '2px 8px', borderRadius: 20, background: 'linear-gradient(135deg, #22c55e, #16a34a)', color: '#fff', fontSize: '0.62rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em' }}>NEW</span>
+                    )}
+                  </div>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.4, marginBottom: 10, color: '#e4e8f4', flex: 1 }}>{post.title}</h3>
+                  <p style={{ color: '#6a729a', fontSize: '0.85rem', lineHeight: 1.65, marginBottom: 16 }}>
+                    {(post.description || post.excerpt || '').slice(0, 120)}...
+                  </p>
+                  <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#6a729a' }}>{post.date}</span>
+                    <span style={{ fontSize: '0.82rem', color: '#4f8bff', fontWeight: 600 }}>Read Review →</span>
+                  </div>
+                </a>
+              )
+            })}
           </div>
         </section>
 
-        {/* ── WHY TRUST US ── */}
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="section-eyebrow">Why Choose Us</div>
-          <div className="section-header">
-            <h2 className="section-title">Why Readers Trust ai-review.tech</h2>
-          </div>
-          <div className="why-grid">
-            {([{"icon":"🔬","title":"Hands-on Testing","desc":"Every tool is tested by real users across dozens of tasks — not just spec sheets."},{"icon":"💰","title":"No Paid Reviews","desc":"We never accept payment for positive coverage. Our ratings are 100% independent."},{"icon":"🔄","title":"Regularly Updated","desc":"AI moves fast. We update our reviews when tools change, add features, or raise prices."},{"icon":"⚖️","title":"Fair Comparisons","desc":"Head-to-head comparisons use identical prompts and tasks for true apples-to-apples results."}] as {icon:string,title:string,desc:string}[]).map((w) => (
-              <div key={w.title} className="why-card">
-                <span className="why-icon">{w.icon}</span>
-                <div className="why-title">{w.title}</div>
-                <div className="why-desc">{w.desc}</div>
-              </div>
-            ))}
+        {/* ── NEWSLETTER ─────────────────────────────────── */}
+        <section style={{ padding: '0 24px 80px', maxWidth: 680, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ background: 'rgba(10,15,28,0.78)', backdropFilter: 'blur(24px)', border: '1px solid rgba(79,139,255,0.22)', borderRadius: 22, padding: '56px 40px' }}>
+            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: 16 }}>🤖</span>
+            <h2 style={{ fontSize: '1.7rem', fontWeight: 900, letterSpacing: '-0.03em', marginBottom: 14 }}>Stay Ahead of AI</h2>
+            <p style={{ color: '#6a729a', marginBottom: 32, lineHeight: 1.7 }}>Weekly AI tool reviews, comparisons, and guides straight to your inbox.</p>
+            <NewsletterForm />
           </div>
         </section>
 
-        {/* ── FAQ ── */}
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="section-eyebrow">Common Questions</div>
-          <div className="section-header">
-            <h2 className="section-title">Frequently Asked Questions</h2>
+        {/* ── FOOTER ─────────────────────────────────────── */}
+        <footer style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '44px 24px', textAlign: 'center', color: '#404866', fontSize: '0.82rem' }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 18 }}>
+              {[['About', '/about'], ['All Articles', '/all-articles'], ['Categories', '/categories'], ['Contact', '/contact'], ['Privacy Policy', '/privacy-policy'], ['Terms', '/terms'], ['Write for Us', '/write-for-us']].map(([l, h]) => (
+                <a key={h} href={h} style={{ color: '#404866', textDecoration: 'none' }}>{l}</a>
+              ))}
+            </div>
+            <p style={{ marginBottom: 8 }}>© 2025 ai-review.tech — Independent AI Tool Reviews</p>
+            <p style={{ fontSize: '0.75rem' }}>Affiliate disclosure: Some links may earn us a commission at no extra cost to you.</p>
           </div>
-          <div className="faq-list">
-            {([{"q":"What is the best AI tool for writing in 2025?","a":"ChatGPT (GPT-4o) and Claude 3.5 Sonnet are the top picks for most writing use cases. Claude excels at long-form content while ChatGPT is more versatile across task types."},{"q":"Are there good free AI tools available?","a":"Yes — ChatGPT Free, Gemini Free, and Microsoft Copilot all offer capable free tiers. We have a dedicated guide comparing the best free AI tools."},{"q":"How do you score AI tools?","a":"We test each tool across 50+ tasks covering writing, analysis, coding, and creativity. Scores reflect accuracy, speed, pricing, and ease of use."},{"q":"Is Claude better than ChatGPT?","a":"It depends on the task. Claude is often better for nuanced writing and following complex instructions, while ChatGPT has a larger ecosystem and better image generation."},{"q":"How often are your reviews updated?","a":"We review and update articles whenever a tool releases a major update or when we identify that information has become outdated — typically every 2-3 months."}] as {q:string,a:string}[]).map((f) => (
-              <div key={f.q} className="faq-item">
-                <div className="faq-q">{f.q}</div>
-                <div className="faq-a">{f.a}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── NEWSLETTER ── */}
-        <div className="newsletter-section">
-          <h2>Stay Ahead of the AI Curve</h2>
-          <p>Get weekly roundups of the latest AI tool reviews, comparisons and expert guides.</p>
-          <NewsletterForm />
-        </div>
-
-        {/* ── CTA ── */}
-        <div className="cta-section">
-          <h2>Find Your Perfect AI Tool Today</h2>
-          <p>Stop wasting time on tools that underdeliver. Get expert-reviewed recommendations matched to your specific workflow.</p>
-          <a href="/best-ai-tools" className="cta-btn">Explore All AI Tools →</a>
-        </div>
-
+        </footer>
       </div>
+
+      <style>{`
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #050814; -webkit-font-smoothing: antialiased; }
+        a { text-decoration: none; }
+        a:hover { opacity: 0.85; }
+        @media (max-width: 640px) {
+          a[href^="/"][style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </>
-  );
+  )
 }
